@@ -85,13 +85,23 @@ export async function postToInstagramStory({ imageUrl }) {
   });
 }
 
+// Il token dell'utente di sistema funziona per le API Instagram, ma per
+// pubblicare "come" la Pagina Facebook serve il suo Page Access Token
+// specifico, ottenibile scambiando il token dell'utente di sistema.
+async function getPageAccessToken(pageId, systemUserToken) {
+  const { access_token } = await graphGet(
+    `${pageId}?fields=access_token&access_token=${systemUserToken}`
+  );
+  return access_token;
+}
+
 export async function postToFacebook({ imageUrl, caption }) {
   const pageId = process.env.META_PAGE_ID;
-  const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
+  const pageAccessToken = await getPageAccessToken(pageId, process.env.META_PAGE_ACCESS_TOKEN);
 
   return graphPost(`${pageId}/photos`, {
     url: imageUrl,
     caption,
-    access_token: accessToken,
+    access_token: pageAccessToken,
   });
 }

@@ -54,12 +54,34 @@ async function main() {
   const caption = await generateCaption(item, { avoidCaptions: recentCaptions(history) });
   console.log("Caption generata:\n" + caption);
 
+  // Il post sul feed Instagram è la pubblicazione "principale": appena riesce,
+  // salviamo subito lo storico. Così, se storia o Facebook falliscono dopo,
+  // un eventuale nuovo tentativo non ripubblica lo stesso prodotto da capo.
   await postToInstagram({ imageUrl: item.imageUrl, caption });
-  await postToInstagramStory({ imageUrl: item.imageUrl });
-  await postToFacebook({ imageUrl: item.imageUrl, caption });
-
   await saveHistoryEntry({ key: item.key, title: item.title, kind: item.kind, caption });
-  console.log("Pubblicato con successo su Instagram (feed + storia) e Facebook.");
+  console.log("Pubblicato sul feed Instagram.");
+
+  const failures = [];
+
+  try {
+    await postToInstagramStory({ imageUrl: item.imageUrl });
+    console.log("Pubblicata anche la storia Instagram.");
+  } catch (err) {
+    console.error("Errore nella pubblicazione della storia Instagram:", err);
+    failures.push("storia Instagram");
+  }
+
+  try {
+    await postToFacebook({ imageUrl: item.imageUrl, caption });
+    console.log("Pubblicato anche su Facebook.");
+  } catch (err) {
+    console.error("Errore nella pubblicazione su Facebook:", err);
+    failures.push("Facebook");
+  }
+
+  if (failures.length > 0) {
+    throw new Error(`Pubblicazione riuscita solo parzialmente, falliti: ${failures.join(", ")}`);
+  }
 }
 
 main().catch((err) => {
