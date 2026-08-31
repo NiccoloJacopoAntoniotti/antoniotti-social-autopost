@@ -21,6 +21,34 @@ async function graphPost(path, body) {
   return json;
 }
 
+async function graphGet(path) {
+  const res = await fetch(graphUrl(path));
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(`Meta Graph API error su ${path}: ${JSON.stringify(json)}`);
+  }
+  return json;
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Instagram scarica ed elabora l'immagine in background dopo la creazione del
+// "contenitore": bisogna aspettare che status_code sia FINISHED prima di
+// poter chiamare media_publish, altrimenti Meta risponde con errore 9007.
+async function waitUntilMediaReady(creationId, accessToken, { retries = 10, delayMs = 3000 } = {}) {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    const { status_code } = await graphGet(
+      `${creationId}?fields=status_code&access_token=${accessToken}`
+    );
+    if (status_code === "FINISHED") return;
+    if (status_code === "ERROR") {
+      throw new Error(`Instagram non è riuscito a elaborare il contenuto multimediale (creation id ${creationId})`);
+    }
+    await sleep(delayMs);
+  }
+  throw new Error(`Il contenuto multimediale non è pronto dopo ${retries} tentativi (creation id ${creationId})`);
+}
+
 export async function postToInstagram({ imageUrl, caption }) {
   const igUserId = process.env.META_IG_USER_ID;
   const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
@@ -30,6 +58,8 @@ export async function postToInstagram({ imageUrl, caption }) {
     caption,
     access_token: accessToken,
   });
+
+  await waitUntilMediaReady(creationId, accessToken);
 
   return graphPost(`${igUserId}/media_publish`, {
     creation_id: creationId,
@@ -46,6 +76,8 @@ export async function postToInstagramStory({ imageUrl }) {
     media_type: "STORIES",
     access_token: accessToken,
   });
+
+  await waitUntilMediaReady(creationId, accessToken);
 
   return graphPost(`${igUserId}/media_publish`, {
     creation_id: creationId,
