@@ -1,0 +1,9 @@
+[
+  {
+    "enabled": false,
+    "kind": "supplier",
+    "title": "ESEMPIO — Nome fornitore o servizio",
+    "description": "Cosa offre, in 1-2 frasi (usato per generare la caption)",
+    "imageUrl": "https://url-immagine-fornitore-o-servizio.jpg"
+  }
+]

@@ -1,0 +1,56 @@
+# Pubblica automaticamente 3 contenuti a settimana (lun/mer/ven) su Instagram
+# e Facebook per antoniotti-autoricambi, senza intervento manuale.
+#
+# Secrets da configurare nel repository GitHub (Settings -> Secrets -> Actions):
+#   SHOPIFY_STORE_DOMAIN     es. antoniotti-autoricambi.myshopify.com
+#   SHOPIFY_ADMIN_TOKEN      Admin API access token (custom app Shopify, scope read_orders + read_products)
+#   SHOPIFY_PUBLIC_DOMAIN    es. antoniotti-autoricambi.it (dominio pubblico dello shop, per il link prodotto)
+#   META_PAGE_ID             ID della Pagina Facebook
+#   META_IG_USER_ID          ID dell'account Instagram Business collegato alla Pagina
+#   META_PAGE_ACCESS_TOKEN   Page Access Token di lunga durata (permessi: pages_manage_posts,
+#                            pages_read_engagement, instagram_basic, instagram_content_publish, pages_show_list)
+#   ANTHROPIC_API_KEY        per generare le caption
+#   WHATSAPP_NUMBER          numero in formato internazionale senza + (es. 393331234567)
+
+name: Social autopost
+
+on:
+  schedule:
+    - cron: '0 8 * * 1,3,5' # lun/mer/ven alle 08:00 UTC (~09:00/10:00 ora italiana)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Pubblica contenuto
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+          SHOPIFY_PUBLIC_DOMAIN: ${{ secrets.SHOPIFY_PUBLIC_DOMAIN }}
+          META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WHATSAPP_NUMBER: ${{ secrets.WHATSAPP_NUMBER }}
+        run: npm run post
+
+      - name: Salva storico pubblicazioni
+        run: |
+          git config user.name "social-autopost-bot"
+          git config user.email "actions@github.com"
+          git add data/posted-history.json
+          git diff --cached --quiet || git commit -m "chore: aggiorna storico social autopost"
+          git push
