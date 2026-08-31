@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { getBestSellingProducts } from "./shopify.js";
 import { generateCaption } from "./caption.js";
-import { postToInstagram, postToFacebook } from "./meta.js";
+import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js";
 import { loadHistory, saveHistoryEntry, filterRecentlyPosted, recentCaptions } from "./history.js";
 
 const REQUIRED_ENV = [
@@ -46,9 +46,9 @@ async function pickNextItem() {
     imageUrl: s.imageUrl,
   }));
 
-  // 2 post su 3 a settimana pescano da prodotti best seller, 1 da fornitori/servizi,
+  // 3 post su 4 a settimana pescano da prodotti best seller, 1 da fornitori/servizi,
   // ma se una delle due liste è vuota si ripiega sull'altra.
-  const pool = suppliers.length > 0 && Math.random() < 1 / 3 ? suppliers : products;
+  const pool = suppliers.length > 0 && Math.random() < 1 / 4 ? suppliers : products;
   const fallbackPool = pool === products ? suppliers : products;
 
   const fresh = filterRecentlyPosted(history, pool, (c) => c.key);
@@ -76,10 +76,11 @@ async function main() {
   console.log("Caption generata:\n" + caption);
 
   await postToInstagram({ imageUrl: item.imageUrl, caption });
+  await postToInstagramStory({ imageUrl: item.imageUrl });
   await postToFacebook({ imageUrl: item.imageUrl, caption });
 
   await saveHistoryEntry({ key: item.key, title: item.title, kind: item.kind, caption });
-  console.log("Pubblicato con successo su Instagram e Facebook.");
+  console.log("Pubblicato con successo su Instagram (feed + storia) e Facebook.");
 }
 
 main().catch((err) => {

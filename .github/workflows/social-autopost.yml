@@ -1,5 +1,5 @@
-# Pubblica automaticamente 3 contenuti a settimana (lun/mer/ven) su Instagram
-# e Facebook per antoniotti-autoricambi, senza intervento manuale.
+# Pubblica automaticamente 4 contenuti a settimana (lun/mer/ven/dom) su Instagram
+# (feed + storia) e Facebook per antoniotti-autoricambi, senza intervento manuale.
 #
 # Secrets da configurare nel repository GitHub (Settings -> Secrets -> Actions):
 #   SHOPIFY_STORE_DOMAIN     es. antoniotti-autoricambi.myshopify.com
@@ -16,7 +16,7 @@ name: Social autopost
 
 on:
   schedule:
-    - cron: '0 8 * * 1,3,5' # lun/mer/ven alle 08:00 UTC (~09:00/10:00 ora italiana)
+    - cron: '0 8 * * 0,1,3,5' # lun/mer/ven/dom alle 08:00 UTC (~09:00/10:00 ora italiana)
   workflow_dispatch: {}
 
 permissions:

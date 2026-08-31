@@ -1,18 +1,23 @@
 # Social autopost — Antoniotti Autoricambi
 
-Pubblica in automatico 3 contenuti a settimana (lun/mer/ven, 08:00 UTC) su
-Instagram e Facebook, senza alcuna approvazione manuale. Vedi
+Pubblica in automatico 4 contenuti a settimana (lun/mer/ven/dom, 08:00 UTC) su
+Instagram (feed + storia) e Facebook, senza alcuna approvazione manuale. Vedi
 `.github/workflows/social-autopost.yml`.
 
 Ogni esecuzione:
 1. Legge i prodotti più venduti negli ultimi 30 giorni dallo Shopify Admin API
-   (2 post su 3 in media), oppure pesca un fornitore/servizio da
-   `config/suppliers.json` (1 post su 3).
+   (3 post su 4 in media), oppure pesca un fornitore/servizio da
+   `config/suppliers.json` (1 post su 4).
 2. Evita di ripetere lo stesso prodotto/fornitore per 45 giorni
    (`data/posted-history.json`, aggiornato e committato automaticamente ad
    ogni run).
 3. Genera la caption in italiano con Claude, con CTA verso WhatsApp.
-4. Pubblica la foto + caption su Instagram Business e sulla Pagina Facebook.
+4. Pubblica la foto + caption sul feed Instagram, la stessa foto come storia
+   Instagram, e la foto + caption sulla Pagina Facebook.
+
+Nota: le storie su **Facebook** (a differenza di Instagram) non hanno
+un'API pubblica affidabile per la pubblicazione automatica di terze parti,
+quindi su Facebook viene pubblicato solo il post normale, non la storia.
 
 ## Setup una tantum (da fare tu, non automatizzabile)
 

@@ -37,6 +37,22 @@ export async function postToInstagram({ imageUrl, caption }) {
   });
 }
 
+export async function postToInstagramStory({ imageUrl }) {
+  const igUserId = process.env.META_IG_USER_ID;
+  const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
+
+  const { id: creationId } = await graphPost(`${igUserId}/media`, {
+    image_url: imageUrl,
+    media_type: "STORIES",
+    access_token: accessToken,
+  });
+
+  return graphPost(`${igUserId}/media_publish`, {
+    creation_id: creationId,
+    access_token: accessToken,
+  });
+}
+
 export async function postToFacebook({ imageUrl, caption }) {
   const pageId = process.env.META_PAGE_ID;
   const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
