@@ -1,8 +1,24 @@
-// Legge gli ordini degli ultimi N giorni dallo Shopify Admin API e calcola
-// i prodotti più venduti (best seller), perché il piano Shopify di base non
-// espone un endpoint "bestsellers" diretto: va derivato dagli order line items.
+// Il negozio è una vetrina (niente ordini reali, si vende via WhatsApp), quindi
+// non esiste un concetto di "best seller" derivabile dagli ordini. I contenuti
+// vengono invece pescati dalle collezioni "in evidenza" del catalogo, che hanno
+// già foto prodotto reali e legittime (sono le foto usate per vendere quei
+// prodotti sul sito stesso).
 
 const API_VERSION = "2024-10";
+
+// Handle delle collezioni da cui pescare i prodotti. Aggiungerne/togliere qui
+// per cambiare cosa può essere pubblicato, senza toccare il resto del codice.
+const FEATURED_COLLECTION_HANDLES = [
+  "bardahl-olio-e-trattamenti-motore",
+  "caschi-da-moto",
+  "ceramic-power-liquid",
+  "copriauto-antigrandine-co-ra",
+  "copricerchi",
+  "lampade-fari-auto-led-xenon-le-migliori-marche-per-la-tua-auto",
+  "optiline",
+  "peruzzo",
+  "tergicristallo-bosh",
+];
 
 function shopifyUrl(path) {
   const domain = process.env.SHOPIFY_STORE_DOMAIN; // es: antoniotti-autoricambi.myshopify.com
@@ -22,43 +38,39 @@ async function shopifyFetch(path) {
   return res.json();
 }
 
-export async function getBestSellingProducts({ days = 30, limit = 10 } = {}) {
-  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
-  const soldQtyByProductId = new Map();
+async function findCollectionIdsByHandle(handles) {
+  const wanted = new Set(handles);
+  const found = new Map();
 
-  let path = `orders.json?status=any&created_at_min=${since}&limit=250&fields=id,line_items`;
-  while (path) {
-    const data = await shopifyFetch(path);
-    for (const order of data.orders ?? []) {
-      for (const item of order.line_items ?? []) {
-        if (!item.product_id) continue;
-        const prev = soldQtyByProductId.get(item.product_id) ?? 0;
-        soldQtyByProductId.set(item.product_id, prev + item.quantity);
-      }
+  for (const kind of ["custom_collections", "smart_collections"]) {
+    const data = await shopifyFetch(`${kind}.json?limit=250&fields=id,handle`);
+    for (const collection of data[kind] ?? []) {
+      if (wanted.has(collection.handle)) found.set(collection.handle, collection.id);
     }
-    path = null; // niente paginazione cursor-based per restare semplici: 250 ordini/30gg bastano per un negozio di questa scala
   }
+  return found;
+}
 
-  const rankedIds = [...soldQtyByProductId.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, limit)
-    .map(([id]) => id);
+export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
+  const idsByHandle = await findCollectionIdsByHandle(FEATURED_COLLECTION_HANDLES);
 
   const products = [];
-  for (const id of rankedIds) {
-    const { product } = await shopifyFetch(
-      `products/${id}.json?fields=id,title,handle,body_html,images,variants`
+  for (const [handle, collectionId] of idsByHandle) {
+    const data = await shopifyFetch(
+      `collections/${collectionId}/products.json?limit=${limit}&fields=id,title,handle,images,variants`
     );
-    if (!product?.images?.length) continue; // niente immagine, niente post
-    products.push({
-      id: product.id,
-      title: product.title,
-      handle: product.handle,
-      price: product.variants?.[0]?.price,
-      imageUrl: product.images[0].src,
-      productUrl: `https://${process.env.SHOPIFY_PUBLIC_DOMAIN}/products/${product.handle}`,
-      soldQty: soldQtyByProductId.get(id),
-    });
+    for (const product of data.products ?? []) {
+      if (!product.images?.length) continue; // niente immagine, niente post
+      products.push({
+        id: product.id,
+        title: product.title,
+        handle: product.handle,
+        price: product.variants?.[0]?.price,
+        imageUrl: product.images[0].src,
+        productUrl: `https://${process.env.SHOPIFY_PUBLIC_DOMAIN}/products/${product.handle}`,
+        collectionHandle: handle,
+      });
+    }
   }
   return products;
 }

@@ -35,18 +35,11 @@ export async function generateCaption(item, { avoidCaptions = [] } = {}) {
         .join("\n")}`
     : "";
 
-  const prompt = (item.kind === "product"
-    ? `Prodotto tra i più venduti da promuovere:
+  const prompt = `Prodotto dal catalogo da promuovere:
 - Nome: ${item.title}
 - Prezzo: ${item.price ? `${item.price} €` : "su richiesta"}
 
-Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}`
-    : `Fornitore/servizio da sponsorizzare:
-- Nome: ${item.title}
-- Descrizione: ${item.description ?? ""}
-
-Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}`
-  ) + varietyNote;
+Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-5",

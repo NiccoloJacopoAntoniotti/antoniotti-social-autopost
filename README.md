@@ -4,11 +4,16 @@ Pubblica in automatico 4 contenuti a settimana (lun/mer/ven/dom, 08:00 UTC) su
 Instagram (feed + storia) e Facebook, senza alcuna approvazione manuale. Vedi
 `.github/workflows/social-autopost.yml`.
 
+Il negozio non ha ordini reali su Shopify (è una vetrina, si vende via
+WhatsApp), quindi non esiste un concetto di "best seller". I contenuti
+vengono pescati dalle **collezioni in evidenza** del catalogo (elenco handle
+in `src/shopify.js`, costante `FEATURED_COLLECTION_HANDLES`) — usano le foto
+prodotto reali già caricate sul sito, niente da caricare a mano né rischi di
+copyright.
+
 Ogni esecuzione:
-1. Legge i prodotti più venduti negli ultimi 30 giorni dallo Shopify Admin API
-   (3 post su 4 in media), oppure pesca un fornitore/servizio da
-   `config/suppliers.json` (1 post su 4).
-2. Evita di ripetere lo stesso prodotto/fornitore per 45 giorni
+1. Legge i prodotti (con foto) dalle collezioni in evidenza su Shopify.
+2. Evita di ripetere lo stesso prodotto per 45 giorni
    (`data/posted-history.json`, aggiornato e committato automaticamente ad
    ogni run).
 3. Genera la caption in italiano con Claude, con CTA verso WhatsApp.
@@ -25,9 +30,19 @@ Queste operazioni richiedono i tuoi login/account: nessuno può farle al posto
 tuo, ma vanno fatte una sola volta.
 
 ### 1. Shopify — token Admin API
-- Shopify admin → Impostazioni → App e canali di vendita → **Sviluppa app**
-- Crea una nuova app privata, scope `read_orders` + `read_products`
-- Installa l'app e copia l'**Admin API access token**
+Le nuove app custom (create dalla Dev Dashboard di Shopify) richiedono uno
+scambio OAuth per ottenere un vero Admin API token (il "Token di
+automazione dell'app" mostrato nell'interfaccia serve solo per il CLI, NON
+funziona per le chiamate API):
+- Crea un'app sulla Dev Dashboard con scope `read_products` (e installala
+  sul negozio)
+- Genera il token con:
+  `https://TUO-NEGOZIO.myshopify.com/admin/oauth/authorize?client_id=CLIENT_ID&scope=read_products&redirect_uri=https://example.com/callback&state=xyz`
+  (apri il link, prendi il `code` dall'URL di redirect anche se la pagina
+  finale dà errore, poi scambialo con
+  `curl -X POST https://TUO-NEGOZIO.myshopify.com/admin/oauth/access_token -d client_id=CLIENT_ID -d client_secret=CLIENT_SECRET -d code=CODE`)
+- Il valore `access_token` nella risposta (`shpat_...`) è il vero token da
+  usare
 
 ### 2. Meta — Pagina Facebook + Instagram Business collegati
 - L'account Instagram deve essere di tipo **Business/Creator** e collegato
@@ -48,10 +63,10 @@ Repo → Settings → Secrets and variables → Actions → New repository secre
 per ognuna delle chiavi elencate in testa a
 `.github/workflows/social-autopost.yml`.
 
-### 4. Fornitori/servizi da sponsorizzare
-Compila `config/suppliers.json` con le voci reali (immagine, titolo,
-descrizione). Mandami le foto/dati dei fornitori che vuoi includere e le
-aggiungo io.
+### 4. Aggiungere/togliere collezioni da cui pescare
+Modifica l'array `FEATURED_COLLECTION_HANDLES` in `src/shopify.js` con gli
+handle delle collezioni Shopify da includere (si vedono nell'URL, es.
+`.../collections/NOME-QUI` → handle è `NOME-QUI`).
 
 ## Test manuale
 Dalla tab **Actions** del repo → "Social autopost" → **Run workflow**, per

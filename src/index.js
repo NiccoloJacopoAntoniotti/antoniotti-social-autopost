@@ -1,5 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { getBestSellingProducts } from "./shopify.js";
+import { getFeaturedCollectionProducts } from "./shopify.js";
 import { generateCaption } from "./caption.js";
 import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js";
 import { loadHistory, saveHistoryEntry, filterRecentlyPosted, recentCaptions } from "./history.js";
@@ -22,43 +21,23 @@ function assertEnv() {
   }
 }
 
-async function loadEnabledSuppliers() {
-  const raw = await readFile(new URL("../config/suppliers.json", import.meta.url), "utf-8");
-  return JSON.parse(raw).filter((s) => s.enabled !== false);
-}
-
 async function pickNextItem() {
   const history = await loadHistory();
 
-  const products = (await getBestSellingProducts({ days: 30, limit: 10 })).map((p) => ({
+  const products = (await getFeaturedCollectionProducts({ limit: 10 })).map((p) => ({
     kind: "product",
     key: `product:${p.id}`,
     title: p.title,
     price: p.price,
     imageUrl: p.imageUrl,
+    productUrl: p.productUrl,
   }));
 
-  const suppliers = (await loadEnabledSuppliers()).map((s) => ({
-    kind: "supplier",
-    key: `supplier:${s.title}`,
-    title: s.title,
-    description: s.description,
-    imageUrl: s.imageUrl,
-  }));
-
-  // 3 post su 4 a settimana pescano da prodotti best seller, 1 da fornitori/servizi,
-  // ma se una delle due liste è vuota si ripiega sull'altra.
-  const pool = suppliers.length > 0 && Math.random() < 1 / 4 ? suppliers : products;
-  const fallbackPool = pool === products ? suppliers : products;
-
-  const fresh = filterRecentlyPosted(history, pool, (c) => c.key);
+  const fresh = filterRecentlyPosted(history, products, (c) => c.key);
   if (fresh.length > 0) return fresh[Math.floor(Math.random() * fresh.length)];
 
-  const freshFallback = filterRecentlyPosted(history, fallbackPool, (c) => c.key);
-  if (freshFallback.length > 0) return freshFallback[Math.floor(Math.random() * freshFallback.length)];
-
-  // tutto già postato di recente: meglio ripetere il best seller assoluto che saltare il post
-  return pool[0] ?? fallbackPool[0] ?? null;
+  // tutto già postato di recente: meglio ripetere un prodotto che saltare il post
+  return products[0] ?? null;
 }
 
 async function main() {
@@ -66,7 +45,7 @@ async function main() {
 
   const item = await pickNextItem();
   if (!item) {
-    console.log("Nessun prodotto o fornitore disponibile da pubblicare, salto questo giro.");
+    console.log("Nessun prodotto con foto disponibile nelle collezioni in evidenza, salto questo giro.");
     return;
   }
 
