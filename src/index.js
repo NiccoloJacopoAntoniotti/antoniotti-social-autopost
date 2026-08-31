@@ -2,6 +2,21 @@ import { getFeaturedCollectionProducts } from "./shopify.js";
 import { generateCaption } from "./caption.js";
 import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js";
 import { loadHistory, saveHistoryEntry, filterRecentlyPosted, recentCaptions } from "./history.js";
+import { buildStoryImage } from "./storyImage.js";
+import { commitAndPush } from "./git.js";
+import { writeFile } from "node:fs/promises";
+
+// Repo pubblico usato anche come hosting per l'immagine generata delle storie
+// (Instagram richiede un URL pubblico, raw.githubusercontent.com lo fornisce
+// gratis per i repo pubblici).
+const REPO = "NiccoloJacopoAntoniotti/antoniotti-social-autopost";
+const STORY_IMAGE_PATH = "data/story-image.jpg";
+
+function formatWhatsappNumber(raw) {
+  // Numeri italiani: 39 + 3 + 3 + 4 cifre (es. 393272436497 -> +39 327 243 6497)
+  const match = raw.match(/^39(\d{3})(\d{3})(\d{4})$/);
+  return match ? `+39 ${match[1]} ${match[2]} ${match[3]}` : `+${raw}`;
+}
 
 const REQUIRED_ENV = [
   "SHOPIFY_STORE_DOMAIN",
@@ -64,8 +79,20 @@ async function main() {
   const failures = [];
 
   try {
-    await postToInstagramStory({ imageUrl: item.imageUrl });
-    console.log("Pubblicata anche la storia Instagram.");
+    const storyBuffer = await buildStoryImage({
+      imageUrl: item.imageUrl,
+      title: item.title,
+      whatsappNumber: formatWhatsappNumber(process.env.WHATSAPP_NUMBER), // niente emoji: i renderer SVG headless spesso non hanno i font a colori
+      siteDomain: process.env.SHOPIFY_PUBLIC_DOMAIN,
+      logoPath: new URL("../assets/logo.jpg", import.meta.url),
+    });
+    await writeFile(new URL(`../${STORY_IMAGE_PATH}`, import.meta.url), storyBuffer);
+    commitAndPush(STORY_IMAGE_PATH, "chore: aggiorna immagine storia social autopost");
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // dà tempo alla CDN di propagare il file
+
+    const storyImageUrl = `https://raw.githubusercontent.com/${REPO}/main/${STORY_IMAGE_PATH}?t=${Date.now()}`;
+    await postToInstagramStory({ imageUrl: storyImageUrl });
+    console.log("Pubblicata anche la storia Instagram (con overlay).");
   } catch (err) {
     console.error("Errore nella pubblicazione della storia Instagram:", err);
     failures.push("storia Instagram");

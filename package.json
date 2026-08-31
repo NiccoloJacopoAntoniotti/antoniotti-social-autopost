@@ -11,6 +11,7 @@
     "post": "node src/index.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.1"
+    "@anthropic-ai/sdk": "^0.32.1",
+    "sharp": "^0.33.5"
   }
 }

@@ -17,12 +17,21 @@ Ogni esecuzione:
    (`data/posted-history.json`, aggiornato e committato automaticamente ad
    ogni run).
 3. Genera la caption in italiano con Claude, con CTA verso WhatsApp.
-4. Pubblica la foto + caption sul feed Instagram, la stessa foto come storia
-   Instagram, e la foto + caption sulla Pagina Facebook.
+4. Pubblica la foto + caption sul feed Instagram e sulla Pagina Facebook.
+5. Genera una versione della foto per la **storia Instagram** con logo,
+   titolo prodotto e numero WhatsApp sovrapposti (`src/storyImage.js`),
+   la salva in `data/story-image.jpg` e la committa/pusha nel repo — serve
+   perché l'API di Instagram richiede un URL pubblico per il contenuto, e
+   `raw.githubusercontent.com` lo fornisce gratis per i repo pubblici
+   (**per questo il repo deve restare pubblico**: non contiene alcun
+   segreto, quelli sono solo nei GitHub Secrets).
 
 Nota: le storie su **Facebook** (a differenza di Instagram) non hanno
 un'API pubblica affidabile per la pubblicazione automatica di terze parti,
 quindi su Facebook viene pubblicato solo il post normale, non la storia.
+
+Nota 2: se cambia il nome utente/repo GitHub, aggiorna la costante `REPO`
+in `src/index.js` (usata per costruire l'URL pubblico dell'immagine storia).
 
 ## Setup una tantum (da fare tu, non automatizzabile)
 

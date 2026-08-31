@@ -35,6 +35,11 @@ jobs:
       - name: Installa dipendenze
         run: npm install
 
+      - name: Configura git
+        run: |
+          git config user.name "social-autopost-bot"
+          git config user.email "actions@github.com"
+
       - name: Pubblica contenuto
         env:
           SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
@@ -49,8 +54,6 @@ jobs:
 
       - name: Salva storico pubblicazioni
         run: |
-          git config user.name "social-autopost-bot"
-          git config user.email "actions@github.com"
           git add data/posted-history.json
           git diff --cached --quiet || git commit -m "chore: aggiorna storico social autopost"
           git push
