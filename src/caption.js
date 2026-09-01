@@ -23,6 +23,8 @@ Regole di scrittura che segui sempre:
   foto su WhatsApp e ti rispondiamo in giornata"), variandolo ogni volta.
 - Hashtag: 4-6, pertinenti e specifici (ricambi auto, tipo di intervento, zona), mai generici
   tipo #car #auto #instagood.
+- Non menzioni mai un prezzo specifico (il listino non è nel prompt): per il costo rimandi
+  sempre al contatto WhatsApp ("ti diciamo il prezzo appena sappiamo il modello", ecc.).
 - Rispondi SOLO con il testo della caption pronta da incollare, niente markdown, niente
   spiegazioni.`;
 
@@ -37,7 +39,6 @@ export async function generateCaption(item, { avoidCaptions = [] } = {}) {
 
   const prompt = `Prodotto dal catalogo da promuovere:
 - Nome: ${item.title}
-- Prezzo: ${item.price ? `${item.price} €` : "su richiesta"}
 
 Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 
