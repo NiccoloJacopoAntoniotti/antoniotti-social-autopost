@@ -77,6 +77,18 @@ Modifica l'array `FEATURED_COLLECTION_HANDLES` in `src/shopify.js` con gli
 handle delle collezioni Shopify da includere (si vedono nell'URL, es.
 `.../collections/NOME-QUI` → handle è `NOME-QUI`).
 
+### 5. Aggiungere contenuti "al volo" senza toccare il codice
+C'è una collezione apposta, **"Social - In evidenza"** (handle
+`social-in-evidenza`), pensata per buttarci dentro qualsiasi prodotto/foto
+senza doverlo legare a un brand specifico:
+- Crea il prodotto su Shopify (titolo, foto, prezzo)
+- Impostalo in **Stato: Bozza** (o togli la spunta al canale "Negozio
+  online") se non vuoi che sia visibile/acquistabile sul sito pubblico —
+  resta comunque letto dal bot, perché usa l'Admin API
+- Assegnalo alla collezione "Social - In evidenza"
+
+Il prossimo run del bot può pescarlo, senza nessun intervento sul codice.
+
 ## Test manuale
 Dalla tab **Actions** del repo → "Social autopost" → **Run workflow**, per
 lanciare una pubblicazione subito senza aspettare il cron.

@@ -18,6 +18,10 @@ const FEATURED_COLLECTION_HANDLES = [
   "optiline",
   "peruzzo",
   "tergicristallo-bosh",
+  // Collezione "jolly": per aggiungere contenuti al bot senza doverli legare a
+  // un brand specifico, basta creare/spuntare il prodotto qui — anche in
+  // stato "Bozza" (non visibile sul sito, ma letto comunque dall'Admin API).
+  "social-in-evidenza",
 ];
 
 function shopifyUrl(path) {
@@ -57,7 +61,7 @@ export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
   const products = [];
   for (const [handle, collectionId] of idsByHandle) {
     const data = await shopifyFetch(
-      `collections/${collectionId}/products.json?limit=${limit}&fields=id,title,handle,images,variants`
+      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants`
     );
     for (const product of data.products ?? []) {
       if (!product.images?.length) continue; // niente immagine, niente post
