@@ -36,17 +36,33 @@ function assertEnv() {
   }
 }
 
+// Tag da mettere sui prodotti (es. collezione "Social - In evidenza") il cui
+// contenuto ha senso solo in una stagione precisa (es. "Stagionali inverno",
+// "Climatizzazione"). Non è un vincolo rigido: fuori da inverno/estate non c'è
+// nessuna esclusione, si pesca da tutto normalmente.
+const SEASON_TAG_WINTER = "stagione-inverno";
+const SEASON_TAG_SUMMER = "stagione-estate";
+
+function isOffSeason(tags) {
+  const month = new Date().getMonth() + 1; // 1-12
+  if ([12, 1, 2].includes(month)) return tags.includes(SEASON_TAG_SUMMER); // inverno: niente prodotti estivi
+  if ([6, 7, 8].includes(month)) return tags.includes(SEASON_TAG_WINTER); // estate: niente prodotti invernali
+  return false; // primavera/autunno: nessun vincolo stagionale
+}
+
 async function pickNextItem() {
   const history = await loadHistory();
 
-  const products = (await getFeaturedCollectionProducts({ limit: 10 })).map((p) => ({
-    kind: "product",
-    key: `product:${p.id}`,
-    title: p.title,
-    price: p.price,
-    imageUrl: p.imageUrl,
-    productUrl: p.productUrl,
-  }));
+  const products = (await getFeaturedCollectionProducts({ limit: 10 }))
+    .filter((p) => !isOffSeason(p.tags))
+    .map((p) => ({
+      kind: "product",
+      key: `product:${p.id}`,
+      title: p.title,
+      price: p.price,
+      imageUrl: p.imageUrl,
+      productUrl: p.productUrl,
+    }));
 
   const fresh = filterRecentlyPosted(history, products, (c) => c.key);
   if (fresh.length > 0) return fresh[Math.floor(Math.random() * fresh.length)];

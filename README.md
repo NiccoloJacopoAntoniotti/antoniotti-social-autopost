@@ -89,6 +89,15 @@ senza doverlo legare a un brand specifico:
 
 Il prossimo run del bot può pescarlo, senza nessun intervento sul codice.
 
+### 6. Escludere un prodotto in bassa stagione
+Se un prodotto ha senso solo in una stagione precisa (es. "Stagionali
+inverno", "Climatizzazione"), aggiungigli su Shopify il **tag**
+`stagione-inverno` oppure `stagione-estate`. Da dicembre a febbraio il bot
+salta i prodotti taggati `stagione-estate`, da giugno ad agosto salta quelli
+taggati `stagione-inverno`; nei mesi di mezzo (primavera/autunno) non c'è
+nessuna esclusione. Un prodotto senza questi tag viene pescato tutto l'anno
+come prima.
+
 ## Test manuale
 Dalla tab **Actions** del repo → "Social autopost" → **Run workflow**, per
 lanciare una pubblicazione subito senza aspettare il cron.

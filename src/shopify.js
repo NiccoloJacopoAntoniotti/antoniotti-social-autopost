@@ -61,7 +61,7 @@ export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
   const products = [];
   for (const [handle, collectionId] of idsByHandle) {
     const data = await shopifyFetch(
-      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants`
+      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants,tags`
     );
     for (const product of data.products ?? []) {
       if (!product.images?.length) continue; // niente immagine, niente post
@@ -73,6 +73,7 @@ export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
         imageUrl: product.images[0].src,
         productUrl: `https://${process.env.SHOPIFY_PUBLIC_DOMAIN}/products/${product.handle}`,
         collectionHandle: handle,
+        tags: (product.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean),
       });
     }
   }
