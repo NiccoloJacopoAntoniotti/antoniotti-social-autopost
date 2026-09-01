@@ -1,7 +1,13 @@
 import { getFeaturedCollectionProducts } from "./shopify.js";
 import { generateCaption } from "./caption.js";
 import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js";
-import { loadHistory, saveHistoryEntry, filterRecentlyPosted, recentCaptions } from "./history.js";
+import {
+  loadHistory,
+  saveHistoryEntry,
+  filterRecentlyPosted,
+  filterCollectionCooldown,
+  recentCaptions,
+} from "./history.js";
 import { buildStoryImage } from "./storyImage.js";
 import { commitAndPush } from "./git.js";
 import { writeFile } from "node:fs/promises";
@@ -62,9 +68,18 @@ async function pickNextItem() {
       price: p.price,
       imageUrl: p.imageUrl,
       productUrl: p.productUrl,
+      collectionHandle: p.collectionHandle,
     }));
 
   const fresh = filterRecentlyPosted(history, products, (c) => c.key);
+
+  // Tra i prodotti "freschi", evita di ripescare una collezione-marca già
+  // usata negli ultimi 7 giorni (la jolly fa eccezione, è varia di suo). Se
+  // questo vincolo lascia la ciotola vuota, meglio ignorarlo che saltare il
+  // post: si allenta prima il vincolo sulla collezione, poi come ultima
+  // spiaggia si ripete un prodotto già postato.
+  const freshAndRotated = filterCollectionCooldown(history, fresh);
+  if (freshAndRotated.length > 0) return freshAndRotated[Math.floor(Math.random() * freshAndRotated.length)];
   if (fresh.length > 0) return fresh[Math.floor(Math.random() * fresh.length)];
 
   // tutto già postato di recente: meglio ripetere un prodotto che saltare il post
@@ -89,7 +104,13 @@ async function main() {
   // salviamo subito lo storico. Così, se storia o Facebook falliscono dopo,
   // un eventuale nuovo tentativo non ripubblica lo stesso prodotto da capo.
   await postToInstagram({ imageUrl: item.imageUrl, caption });
-  await saveHistoryEntry({ key: item.key, title: item.title, kind: item.kind, caption });
+  await saveHistoryEntry({
+    key: item.key,
+    title: item.title,
+    kind: item.kind,
+    caption,
+    collectionHandle: item.collectionHandle,
+  });
   console.log("Pubblicato sul feed Instagram.");
 
   const failures = [];

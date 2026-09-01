@@ -13,9 +13,11 @@ copyright.
 
 Ogni esecuzione:
 1. Legge i prodotti (con foto) dalle collezioni in evidenza su Shopify.
-2. Evita di ripetere lo stesso prodotto per 45 giorni
-   (`data/posted-history.json`, aggiornato e committato automaticamente ad
-   ogni run).
+2. Evita di ripetere lo stesso prodotto per 45 giorni, e la stessa
+   collezione-marca per 7 giorni (`data/posted-history.json`, aggiornato e
+   committato automaticamente ad ogni run). La collezione "Social - In
+   evidenza" è esentata dal vincolo dei 7 giorni: essendo già varia al suo
+   interno, può uscire anche giorni consecutivi.
 3. Genera la caption in italiano con Claude, con CTA verso WhatsApp.
 4. Pubblica la foto + caption sul feed Instagram e sulla Pagina Facebook.
 5. Genera una versione della foto per la **storia Instagram** con logo,

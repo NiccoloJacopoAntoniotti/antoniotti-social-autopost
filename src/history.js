@@ -1,7 +1,9 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { JOLLY_COLLECTION_HANDLE } from "./shopify.js";
 
 const HISTORY_PATH = new URL("../data/posted-history.json", import.meta.url);
 const COOLDOWN_DAYS = 45; // non ripetere lo stesso prodotto/fornitore prima di ~1 mese e mezzo
+const COLLECTION_COOLDOWN_DAYS = 7; // non ripetere la stessa collezione prima di una settimana
 
 export async function loadHistory() {
   try {
@@ -30,4 +32,19 @@ export function filterRecentlyPosted(history, candidates, keyFn) {
     history.filter((h) => new Date(h.postedAt).getTime() > cutoff).map((h) => h.key)
   );
   return candidates.filter((c) => !recentKeys.has(keyFn(c)));
+}
+
+// La collezione jolly è varia al suo interno, quindi può uscire tutti i
+// giorni; le altre collezioni (una marca ciascuna) no, per non sembrare che
+// si spinga sempre lo stesso fornitore per giorni di fila.
+export function filterCollectionCooldown(history, candidates) {
+  const cutoff = Date.now() - COLLECTION_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+  const recentCollections = new Set(
+    history
+      .filter((h) => new Date(h.postedAt).getTime() > cutoff)
+      .map((h) => h.collectionHandle)
+  );
+  return candidates.filter(
+    (c) => c.collectionHandle === JOLLY_COLLECTION_HANDLE || !recentCollections.has(c.collectionHandle)
+  );
 }

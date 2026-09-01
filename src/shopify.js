@@ -6,6 +6,13 @@
 
 const API_VERSION = "2024-10";
 
+// Collezione "jolly": per aggiungere contenuti al bot senza doverli legare a
+// un brand specifico, basta creare/spuntare il prodotto qui — anche in
+// stato "Bozza" (non visibile sul sito, ma letto comunque dall'Admin API).
+// È l'unica collezione esentata dal cooldown di 7 giorni tra due post della
+// stessa collezione (vedi history.js), perché al suo interno è già varia.
+export const JOLLY_COLLECTION_HANDLE = "social-in-evidenza";
+
 // Handle delle collezioni da cui pescare i prodotti. Aggiungerne/togliere qui
 // per cambiare cosa può essere pubblicato, senza toccare il resto del codice.
 const FEATURED_COLLECTION_HANDLES = [
@@ -18,10 +25,7 @@ const FEATURED_COLLECTION_HANDLES = [
   "optiline",
   "peruzzo",
   "tergicristallo-bosh",
-  // Collezione "jolly": per aggiungere contenuti al bot senza doverli legare a
-  // un brand specifico, basta creare/spuntare il prodotto qui — anche in
-  // stato "Bozza" (non visibile sul sito, ma letto comunque dall'Admin API).
-  "social-in-evidenza",
+  JOLLY_COLLECTION_HANDLE,
 ];
 
 function shopifyUrl(path) {
