@@ -75,11 +75,10 @@ ${newsletter.body}
   await writeFile(DRAFT_ABSOLUTE_PATH, draftMarkdown);
   console.log("\nBozza scritta in " + DRAFT_RELATIVE_PATH);
 
-  if (!DRAFT_MODE) {
-    await postToTelegramChannel({ imageUrl: item.imageUrl, caption: telegramText });
-    console.log("Pubblicato su Telegram.");
-  }
-
+  // Salva bozza + storico PRIMA di provare a pubblicare su Telegram: se
+  // l'invio fallisce (rete, permessi, limite caratteri...) il lavoro già
+  // fatto (scelta prodotto, testi generati) non va perso e resta comunque
+  // nel repo da rivedere, invece di sparire con un processo interrotto.
   await saveHistoryEntry(
     {
       key: item.key,
@@ -97,6 +96,11 @@ ${newsletter.body}
     [DRAFT_RELATIVE_PATH, "data/weekly-history.json"],
     "chore: aggiorna bozza contenuto settimanale (Telegram + newsletter)"
   );
+
+  if (!DRAFT_MODE) {
+    await postToTelegramChannel({ imageUrl: item.imageUrl, caption: telegramText });
+    console.log("Pubblicato su Telegram.");
+  }
 }
 
 main().catch((err) => {

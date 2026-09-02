@@ -27,7 +27,9 @@ Regole assolute:
 - Zero linguaggio da ufficio marketing ("scopri la nostra selezione", "qualità e professionalità").
 - Non deve sembrare scritto da un bot: frasi naturali, lunghezza variabile, massimo 2 emoji oltre al
   titolo, mai in fila.
-- Lunghezza totale: 120-180 parole.
+- Lunghezza totale MASSIMO 850 caratteri spazi inclusi (limite tecnico: Telegram accetta al massimo
+  1024 caratteri come didascalia di una foto, e serve margine per titolo/link). Conta i caratteri
+  mentre scrivi: è più importante restare sotto il limite che coprire ogni punto della struttura.
 - Rispondi SOLO col testo pronto da incollare su Telegram (il **grassetto** stile Markdown è
   supportato e benvenuto per 1-2 parole chiave), niente spiegazioni fuori dal testo.`;
 
@@ -56,9 +58,18 @@ Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink
     throw new Error(`Generazione Telegram troncata (stop_reason: ${message.stop_reason}), non pubblico un testo a metà.`);
   }
 
-  return message.content
+  const text = message.content
     .filter((block) => block.type === "text")
     .map((block) => block.text)
     .join("\n")
     .trim();
+
+  // Limite tecnico di Telegram per la didascalia di una foto: 1024 caratteri.
+  // Non ci si affida solo al prompt — se lo sfora comunque, meglio un errore
+  // chiaro che un post rifiutato dall'API o tagliato a metà.
+  if (text.length > 1024) {
+    throw new Error(`Testo Telegram troppo lungo (${text.length}/1024 caratteri): ${text}`);
+  }
+
+  return text;
 }
