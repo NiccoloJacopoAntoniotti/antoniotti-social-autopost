@@ -1,22 +1,25 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { JOLLY_COLLECTION_HANDLE } from "./shopify.js";
 
-const HISTORY_PATH = new URL("../data/posted-history.json", import.meta.url);
+const DEFAULT_HISTORY_PATH = new URL("../data/posted-history.json", import.meta.url);
 const COOLDOWN_DAYS = 45; // non ripetere lo stesso prodotto/fornitore prima di ~1 mese e mezzo
 const COLLECTION_COOLDOWN_DAYS = 7; // non ripetere la stessa collezione prima di una settimana
 
-export async function loadHistory() {
+// Ogni canale (social, contenuto settimanale Telegram/newsletter...) passa il
+// proprio file storico, così le rotazioni non si mescolano tra loro pur
+// condividendo la stessa logica di raffreddamento.
+export async function loadHistory(path = DEFAULT_HISTORY_PATH) {
   try {
-    return JSON.parse(await readFile(HISTORY_PATH, "utf-8"));
+    return JSON.parse(await readFile(path, "utf-8"));
   } catch {
     return [];
   }
 }
 
-export async function saveHistoryEntry(entry) {
-  const history = await loadHistory();
+export async function saveHistoryEntry(entry, path = DEFAULT_HISTORY_PATH) {
+  const history = await loadHistory(path);
   history.push({ ...entry, postedAt: new Date().toISOString() });
-  await writeFile(HISTORY_PATH, JSON.stringify(history, null, 2) + "\n");
+  await writeFile(path, JSON.stringify(history, null, 2) + "\n");
 }
 
 export function recentCaptions(history, count = 5) {

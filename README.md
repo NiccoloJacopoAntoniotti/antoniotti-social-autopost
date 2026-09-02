@@ -106,3 +106,41 @@ lanciare una pubblicazione subito senza aspettare il cron.
 
 Per testare in locale senza pubblicare per sbaglio, commenta le righe
 `postToInstagram`/`postToFacebook` in `src/index.js` e lascia solo i log.
+
+## Contenuto settimanale: "Il ricambio della settimana" (Telegram + newsletter)
+
+Un secondo workflow, `.github/workflows/weekly-content.yml`, gira 1 volta a
+settimana (lunedì 08:43 UTC) e riusa lo stesso motore di scelta prodotto del
+post social (`src/picker.js`, con il proprio storico separato in
+`data/weekly-history.json`, così non ripete per forza lo stesso prodotto
+usato quel giorno sui social). Da un solo prodotto genera **due contenuti con
+tono diverso**, non lo stesso testo copiato:
+
+- **Social** (Instagram/Facebook) = attenzione: hook breve orientato al
+  problema, mai da catalogo ("Filtro Bosch XYZ disponibile").
+- **Telegram** = educazione: spiega cos'è il componente, i sintomi, un
+  errore comune quando lo si compra da soli — chiude sempre invitando a
+  scrivere con targa/modello se serve certezza sulla compatibilità.
+- **Newsletter** = approfondimento e relazione: oggetto come domanda reale
+  dell'automobilista, corpo più lungo, stessa chiusura "consulenza garantita
+  pre e post vendita".
+
+**Nessuna informazione tecnica viene inventata**: il prompt vieta esplicitamente
+di affermare la compatibilità di un ricambio con un veicolo specifico o di
+inventare intervalli di sostituzione/specifiche — quando il discorso lo
+richiede, il testo generato invita sempre a scrivere con la targa.
+
+### Modalità bozza (attiva di default)
+Finché non hai verificato la qualità dei contenuti per qualche settimana, il
+workflow **non pubblica nulla di reale**: genera Telegram + newsletter, li
+scrive in `data/weekly-draft.md` e li committa nel repo. Per attivare la
+pubblicazione automatica su Telegram, aggiungi ai secrets del repo
+`WEEKLY_DRAFT_MODE=false`, `TELEGRAM_BOT_TOKEN` (da **@BotFather** su
+Telegram) e `TELEGRAM_CHANNEL_ID` (es. `@antoniottiautoricambi`).
+
+La **newsletter resta sempre bozza**, anche a regime: non esiste un'API per
+inviarla in automatico con l'infrastruttura Shopify. La soluzione più
+semplice ed economica — niente abbonamenti esterni — è incollare oggetto e
+corpo generati in **Shopify Email** (Marketing → Campagne, incluso gratis
+nel piano Shopify), che invia già alla lista di chi si iscrive dal form
+newsletter nel footer del sito.

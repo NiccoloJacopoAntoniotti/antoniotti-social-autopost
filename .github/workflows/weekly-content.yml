@@ -1,0 +1,57 @@
+# Genera 1 volta a settimana il contenuto "Il ricambio della settimana" per
+# Telegram + newsletter, riusando lo stesso motore di selezione prodotto del
+# post social (src/picker.js), con un prompt diverso per canale.
+#
+# Di default lavora in modalità BOZZA (WEEKLY_DRAFT_MODE non impostata, o
+# impostata a qualsiasi valore diverso da "false"): genera i testi, li scrive
+# in data/weekly-draft.md e li committa nel repo, senza pubblicare nulla di
+# reale né su Telegram né altrove. La newsletter resta SEMPRE bozza da
+# incollare a mano in Shopify Email (non esiste un'API per inviarla in
+# automatico) — è la soluzione più semplice ed economica, già inclusa nel
+# piano Shopify, senza attivare abbonamenti esterni.
+#
+# Secrets da configurare nel repository GitHub (Settings -> Secrets -> Actions),
+# in aggiunta a quelli già usati dal workflow "Social autopost":
+#   WEEKLY_DRAFT_MODE        (opzionale) "false" per pubblicare davvero su Telegram
+#   TELEGRAM_BOT_TOKEN       (solo se WEEKLY_DRAFT_MODE=false) token da @BotFather
+#   TELEGRAM_CHANNEL_ID      (solo se WEEKLY_DRAFT_MODE=false) es. @antoniottiautoricambi
+
+name: Weekly content (Telegram + newsletter)
+
+on:
+  schedule:
+    - cron: '43 8 * * 1' # lunedì alle 08:43 UTC (~09:43/10:43 ora italiana)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Configura git
+        run: |
+          git config user.name "social-autopost-bot"
+          git config user.email "actions@github.com"
+
+      - name: Genera contenuto settimanale
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+          SHOPIFY_PUBLIC_DOMAIN: ${{ secrets.SHOPIFY_PUBLIC_DOMAIN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WHATSAPP_NUMBER: ${{ secrets.WHATSAPP_NUMBER }}
+          WEEKLY_DRAFT_MODE: ${{ secrets.WEEKLY_DRAFT_MODE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: npm run weekly
