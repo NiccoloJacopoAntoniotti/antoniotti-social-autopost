@@ -16,7 +16,10 @@ name: Social autopost
 
 on:
   schedule:
-    - cron: '0 8 * * 0,1,3,5' # lun/mer/ven/dom alle 08:00 UTC (~09:00/10:00 ora italiana)
+    # 08:17 UTC (non 08:00 in punto): GitHub mette in coda migliaia di cron
+    # proprio sui minuti tondi (:00, :15, :30, :45), che su repo con poca
+    # attività può causare ritardi o addirittura salti del trigger schedulato.
+    - cron: '17 8 * * 0,1,3,5' # lun/mer/ven/dom alle 08:17 UTC (~09:17/10:17 ora italiana)
   workflow_dispatch: {}
 
 permissions:
