@@ -25,8 +25,10 @@ Regole assolute:
   sei sicuro: resta su indicazioni generiche.
 - Zero linguaggio da ufficio marketing, zero frasi fatte.
 - Corpo: 150-220 parole.
-- Rispondi SOLO con un oggetto JSON valido, senza markdown né blocchi \`\`\`, con esattamente questa
-  forma: {"subject": "...", "body": "..."}`;
+- Rispondi SOLO in questo formato esatto, niente altro testo prima o dopo:
+OGGETTO: <oggetto qui, su una riga sola>
+---
+<corpo della mail qui, testo semplice>`;
 
 export async function generateNewsletterEmail(item, { avoidSubjects = [] } = {}) {
   const whatsappLink = `https://wa.me/${process.env.WHATSAPP_NUMBER}`;
@@ -43,7 +45,7 @@ Il link/contatto da inserire nella CTA è esattamente: ${whatsappLink}` + variet
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-5",
-    max_tokens: 700,
+    max_tokens: 1200,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: prompt }],
   });
@@ -54,11 +56,9 @@ Il link/contatto da inserire nella CTA è esattamente: ${whatsappLink}` + variet
     .join("\n")
     .trim();
 
-  try {
-    const parsed = JSON.parse(raw);
-    if (!parsed.subject || !parsed.body) throw new Error("campi mancanti");
-    return parsed;
-  } catch (err) {
-    throw new Error(`Risposta newsletter non è JSON valido: ${err.message}\n---\n${raw}`);
+  const match = raw.match(/^OGGETTO:\s*(.+?)\s*\n---\s*\n([\s\S]+)$/);
+  if (!match) {
+    throw new Error(`Risposta newsletter non nel formato atteso "OGGETTO: ...\\n---\\n...":\n${raw}`);
   }
+  return { subject: match[1].trim(), body: match[2].trim() };
 }
