@@ -20,7 +20,11 @@ name: Weekly content (Telegram + newsletter)
 
 on:
   schedule:
-    - cron: '43 8 * * 1' # lunedì alle 08:43 UTC (~09:43/10:43 ora italiana)
+    # 08:22 UTC, non 08:00 in punto: stesso motivo del post social (vedi
+    # social-autopost.yml) — evita la congestione dei cron su minuti tondi.
+    # È vicino al post social del lunedì (08:17 UTC) ma non identico, per non
+    # far partire due workflow nello stesso secondo.
+    - cron: '22 8 * * 1' # lunedì alle 08:22 UTC (~09:22/10:22 ora italiana)
   workflow_dispatch: {}
 
 permissions:
