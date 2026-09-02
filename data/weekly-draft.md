@@ -1,25 +1,33 @@
 # Contenuto della settimana — 2026-09-02
 
 ## Prodotto scelto
-CASCO DA MOTO MOTO CABERG UPTOWN WHITE XXL — collezione: caschi-da-moto
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_1_36085c55-664f-4b2d-be0e-9058d6315bb3.png?v=1656089310
+OSRAM LEDriving® HL – Lampade LED fari auto — collezione: lampade-fari-auto-led-xenon-le-migliori-marche-per-la-tua-auto
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/download_2204f86d-5a86-4e1e-bd94-43f11f5504b0.jpg?v=1757948744
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: BOZZA — non pubblicato, da rivedere
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Ti si appanna la visiera, ti fa male il collo dopo un'ora di sella o senti che il casco "balla" in autostrada? Forse è il momento di guard
+Di notte i fari sembrano illuminare sempre meno, anche se le lampadine "funzionano"?
+
+Con il tempo l'alogena tradizionale perde resa luminosa senza bruciarsi del tutto: continua ad accendersi ma la luce diventa più gialla e corta, e te ne accorgi perché la strada davanti sembra più buia del solito. Qui entrano in gioco i LED da fari come gli OSRAM LEDriving® HL: pensati per sostituire l'alogena classica con una luce più bianca e potente, a parità di consumo elettrico.
+
+Il punto delicato è che non tutti i fari sono predisposti per accogliere un LED: dipende dalla forma dell'attacco, dallo spazio nella sede del faro e a volte dall'omologazione del veicolo. È l'errore più comune quando si compra online da soli: si guarda solo se "la lampadina entra", senza controllare se è idonea per quel modello specifico.
+
+Per questo non diamo mai per scontato che un ricambio vada bene a scatola chiusa: se non sei sicuro, scrivici con targa e modello e verifichiamo insieme 🔧. Ti seguiamo anche dopo l'acquisto, se hai dubbi sul montaggio.
+
+Scrivici su WhatsApp: https://wa.me/393272436497
 
 ## Newsletter (da incollare in Shopify Email — invio sempre manuale)
-Oggetto: Il tuo casco ti protegge davvero o è solo comodo da mettere?
+Oggetto: Guidi di notte con la sensazione di non vedere abbastanza? Non sei tu, sono i fari.
 
-Molti motociclisti scelgono il casco guardando il prezzo o l'estetica, senza sapere che una taglia sbagliata riduce la protezione anche se il casco è omologato e di qualità. Il casco integrale, come il Caberg Uptown, è pensato per avvolgere la testa in modo aderente ma non stringere: se si muove quando scuoti la testa, o se lascia segni di pressione dopo pochi minuti, qualcosa non va.
+Ti è mai capitato di guidare la sera e sentire che la strada davanti sembra sempre un po' più buia del dovuto? Non è una sensazione, è quasi sempre un segnale reale. I proiettori con lampadine tradizionali, con il tempo, perdono resa luminosa: la luce diventa più gialla, meno bianca, e la visibilità si riduce senza che te ne accorga giorno per giorno.
 
-I sintomi da controllare sono semplici: il casco scivola avanti in frenata, senti rumore d'aria eccessivo, la visiera si appanna più del normale, oppure semplicemente non riesci a indossarlo comodamente per più di venti minuti. Ogni testa è diversa, e la taglia XXL non garantisce la vestibilità giusta per tutti: cambia da persona a persona e da modello a modello, anche all'interno dello stesso brand.
+Le lampade LED per fari, come le OSRAM LEDriving HL, nascono per dare una luce più bianca e potente rispetto alle alogene classiche, migliorando la percezione della strada e dei bordi. Ma qui viene il punto delicato: non tutti i fari sono progettati per accogliere questo tipo di lampada, e non tutte le sostituzioni sono a norma o semplicemente adatte al tuo impianto. Attacco, forma del proiettore, omologazione: cambia da veicolo a veicolo, a volte da versione a versione dello stesso modello.
 
-Per questo la taglia giusta si verifica provandolo, non guardando una tabella online. In negozio ti aiutiamo a misurare la circonferenza della testa e a capire se l'Uptown XXL è la scelta corretta per te, oppure se serve valutare un'altra taglia o modello.
+Per questo motivo, prima di consigliarti qualcosa, ci serve sapere che macchina hai davanti. Scrivici con targa o modello e ti diciamo con chiarezza cosa puoi montare e cosa invece è meglio evitare, per sicurezza e per legge.
 
-Scrivici su WhatsApp con le tue misure o passa in negozio per la prova: https://wa.me/393272436497
+Scrivici su WhatsApp: https://wa.me/393272436497
 
-Da noi non compri solo un casco: ti accompagniamo nella scelta giusta, dalla misura alla manutenzione, con consulenza vera anche dopo l'acquisto.
+Da Antoniotti non vendiamo solo una lampadina: ti aiutiamo a scegliere quella giusta per la tua auto e restiamo a disposizione anche dopo l'acquisto, se qualcosa non va o hai dubbi sul montaggio.
