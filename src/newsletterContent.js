@@ -50,6 +50,10 @@ Il link/contatto da inserire nella CTA è esattamente: ${whatsappLink}` + variet
     messages: [{ role: "user", content: prompt }],
   });
 
+  if (message.stop_reason !== "end_turn") {
+    throw new Error(`Generazione newsletter troncata (stop_reason: ${message.stop_reason}), non la uso a metà.`);
+  }
+
   const raw = message.content
     .filter((block) => block.type === "text")
     .map((block) => block.text)

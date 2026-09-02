@@ -46,10 +46,14 @@ Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-5",
-    max_tokens: 500,
+    max_tokens: 800,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: prompt }],
   });
+
+  if (message.stop_reason !== "end_turn") {
+    throw new Error(`Generazione Telegram troncata (stop_reason: ${message.stop_reason}), non pubblico un testo a metà.`);
+  }
 
   return message.content
     .filter((block) => block.type === "text")

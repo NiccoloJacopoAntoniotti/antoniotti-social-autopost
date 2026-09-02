@@ -44,10 +44,14 @@ Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}`
 
   const message = await anthropic.messages.create({
     model: "claude-sonnet-5",
-    max_tokens: 400,
+    max_tokens: 600,
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: prompt }],
   });
+
+  if (message.stop_reason !== "end_turn") {
+    throw new Error(`Generazione caption troncata (stop_reason: ${message.stop_reason}), non la pubblico a metà.`);
+  }
 
   return message.content
     .filter((block) => block.type === "text")
