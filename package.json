@@ -9,7 +9,8 @@
   },
   "scripts": {
     "post": "node src/index.js",
-    "weekly": "node src/weekly.js"
+    "weekly": "node src/weekly.js",
+    "reply": "node src/autoReply.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",

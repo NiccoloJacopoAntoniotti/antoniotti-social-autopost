@@ -1,0 +1,53 @@
+# Risponde in automatico a chi scrive in privato al bot Telegram (@AntoniottiBot).
+# Non è "cadenzato" come i contenuti: gira ogni 5 minuti tutto il giorno e
+# risponde solo se c'è davvero un messaggio nuovo — a chi scrive sembra quasi
+# in tempo reale, senza bisogno di un server sempre acceso.
+#
+# Risponde SOLO a messaggi privati diretti al bot (chi lo ha cercato lui):
+# niente contatti a freddo, niente messaggi nei gruppi non richiesti.
+#
+# Per qualunque domanda su prezzo, compatibilità con un veicolo o
+# disponibilità in magazzino, il bot non inventa mai una risposta: rimanda
+# sempre a scrivere su WhatsApp con targa/modello.
+#
+# Secrets richiesti (già configurati per gli altri workflow):
+#   ANTHROPIC_API_KEY, TELEGRAM_BOT_TOKEN, WHATSAPP_NUMBER
+
+name: Telegram auto-reply
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram-auto-reply
+  cancel-in-progress: false
+
+jobs:
+  reply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Configura git
+        run: |
+          git config user.name "social-autopost-bot"
+          git config user.email "actions@github.com"
+
+      - name: Controlla e rispondi ai nuovi messaggi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          WHATSAPP_NUMBER: ${{ secrets.WHATSAPP_NUMBER }}
+        run: npm run reply

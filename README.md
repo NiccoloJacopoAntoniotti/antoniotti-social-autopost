@@ -110,7 +110,8 @@ Per testare in locale senza pubblicare per sbaglio, commenta le righe
 ## Contenuto settimanale: "Il ricambio della settimana" (Telegram + newsletter)
 
 Un secondo workflow, `.github/workflows/weekly-content.yml`, gira 1 volta a
-settimana (lunedì 08:43 UTC) e riusa lo stesso motore di scelta prodotto del
+settimana (lunedì 08:22 UTC, vicino al post social delle 08:17) e riusa lo
+stesso motore di scelta prodotto del
 post social (`src/picker.js`, con il proprio storico separato in
 `data/weekly-history.json`, così non ripete per forza lo stesso prodotto
 usato quel giorno sui social). Da un solo prodotto genera **due contenuti con
@@ -130,13 +131,20 @@ di affermare la compatibilità di un ricambio con un veicolo specifico o di
 inventare intervalli di sostituzione/specifiche — quando il discorso lo
 richiede, il testo generato invita sempre a scrivere con la targa.
 
-### Modalità bozza (attiva di default)
-Finché non hai verificato la qualità dei contenuti per qualche settimana, il
-workflow **non pubblica nulla di reale**: genera Telegram + newsletter, li
-scrive in `data/weekly-draft.md` e li committa nel repo. Per attivare la
-pubblicazione automatica su Telegram, aggiungi ai secrets del repo
-`WEEKLY_DRAFT_MODE=false`, `TELEGRAM_BOT_TOKEN` (da **@BotFather** su
-Telegram) e `TELEGRAM_CHANNEL_ID` (es. `@antoniottiautoricambi`).
+### Modalità bozza
+Di default il workflow non pubblica nulla di reale: genera Telegram +
+newsletter, li scrive in `data/weekly-draft.md` e li committa nel repo.
+Impostando il secret `WEEKLY_DRAFT_MODE=false` (**attivo dal 2 settembre
+2026**), oltre a `TELEGRAM_BOT_TOKEN` (da **@BotFather** su Telegram) e
+`TELEGRAM_CHANNEL_ID` (`@antoniottiautoricambi`), il bot pubblica davvero sul
+canale ogni lunedì. Perché funzioni, **il bot deve essere amministratore del
+canale** con permesso "Pubblica messaggi" (Telegram → canale → Amministra →
+Amministratori → Aggiungi).
+
+Nota tecnica: la didascalia di una foto su Telegram non può superare 1024
+caratteri — il prompt in `src/telegramContent.js` si autolimita a 850, e un
+controllo a runtime blocca comunque qualunque testo che lo sfori invece di
+mandarlo troncato o farlo rifiutare dall'API.
 
 La **newsletter resta sempre bozza**, anche a regime: non esiste un'API per
 inviarla in automatico con l'infrastruttura Shopify. La soluzione più
@@ -144,3 +152,27 @@ semplice ed economica — niente abbonamenti esterni — è incollare oggetto e
 corpo generati in **Shopify Email** (Marketing → Campagne, incluso gratis
 nel piano Shopify), che invia già alla lista di chi si iscrive dal form
 newsletter nel footer del sito.
+
+## Risposta automatica su Telegram
+
+Un terzo workflow, `.github/workflows/telegram-reply.yml`, gira ogni 5
+minuti (`src/autoReply.js`) e risponde a chi scrive **in privato** al bot
+(@AntoniottiBot): non è "cadenzato" come i contenuti, è quasi in tempo
+reale, senza bisogno di un server sempre acceso.
+
+Risponde SOLO a messaggi privati diretti al bot — chi lo ha cercato lui.
+Non scrive mai per primo a nessuno, non risponde nei gruppi, non "cerca"
+clienti: è deliberatamente così, contattare per primo persone su Telegram
+viola i termini di servizio della piattaforma ed è percepito come spam.
+
+Le stesse regole di sicurezza degli altri contenuti valgono anche qui
+(`src/autoReplyContent.js`): il bot non inventa mai un prezzo, una
+compatibilità veicolo o una disponibilità di magazzino — per queste tre cose
+rimanda sempre a scrivere su WhatsApp con targa/modello. Per domande
+generiche (orari, indirizzo, come funziona il negozio) risponde con i fatti
+reali del negozio, passati nel prompt.
+
+Tiene traccia dell'ultimo messaggio già gestito in
+`data/telegram-offset.json` (committato ad ogni run), così anche se il bot
+sta rispondendo a più persone in sequenza non ne perde né ne rilavora
+nessuno tra un'esecuzione e l'altra.
