@@ -36,10 +36,26 @@ function assertEnv() {
   }
 }
 
+function alreadyPostedToday(history) {
+  const today = new Date().toISOString().slice(0, 10); // data UTC, stesso fuso del cron
+  return history.some((h) => h.postedAt?.slice(0, 10) === today);
+}
+
 async function main() {
   assertEnv();
 
   const history = await loadHistory();
+
+  // Il workflow gira più volte nella stessa finestra mattutina (vedi
+  // social-autopost.yml) come ripescaggio, perché il cron di GitHub su
+  // repository poco attivi può partire con ore di ritardo o saltare del
+  // tutto una finestra. Se oggi si è già pubblicato con successo, i run
+  // successivi non devono ripetere il post.
+  if (alreadyPostedToday(history)) {
+    console.log("Già pubblicato oggi, salto questo giro (è un run di ripescaggio).");
+    return;
+  }
+
   const item = await pickNextItem(history);
   if (!item) {
     console.log("Nessun prodotto con foto disponibile nelle collezioni in evidenza, salto questo giro.");

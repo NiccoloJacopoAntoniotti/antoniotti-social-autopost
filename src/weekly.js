@@ -34,10 +34,25 @@ function assertEnv() {
   }
 }
 
+function alreadyPostedToday(history) {
+  const today = new Date().toISOString().slice(0, 10); // data UTC, stesso fuso del cron
+  return history.some((h) => h.postedAt?.slice(0, 10) === today);
+}
+
 async function main() {
   assertEnv();
 
   const history = await loadHistory(WEEKLY_HISTORY_PATH);
+
+  // Stesso motivo del post social: il cron di GitHub può partire in ritardo
+  // o saltare una finestra, quindi il workflow ha più orari di ripescaggio
+  // nella stessa mattina di lunedì. Se oggi si è già generato/pubblicato,
+  // i run successivi non devono ripetere il lavoro.
+  if (alreadyPostedToday(history)) {
+    console.log("Già generato oggi, salto questo giro (è un run di ripescaggio).");
+    return;
+  }
+
   const item = await pickNextItem(history);
   if (!item) {
     console.log("Nessun prodotto disponibile per il contenuto settimanale, salto questo giro.");

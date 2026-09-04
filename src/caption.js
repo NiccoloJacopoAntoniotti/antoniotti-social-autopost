@@ -42,20 +42,27 @@ export async function generateCaption(item, { avoidCaptions = [] } = {}) {
 
 Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 
-  const message = await anthropic.messages.create({
-    model: "claude-sonnet-5",
-    max_tokens: 600,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content: prompt }],
-  });
+  // La lunghezza reale della risposta varia parecchio da un tentativo
+  // all'altro (non è prevedibile a priori): invece di fissare un budget di
+  // token enorme sempre, si tenta con un budget normale e solo se viene
+  // troncata si riprova una volta con molto più margine.
+  for (const maxTokens of [1000, 2500]) {
+    const message = await anthropic.messages.create({
+      model: "claude-sonnet-5",
+      max_tokens: maxTokens,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: prompt }],
+    });
 
-  if (message.stop_reason !== "end_turn") {
-    throw new Error(`Generazione caption troncata (stop_reason: ${message.stop_reason}), non la pubblico a metà.`);
+    if (message.stop_reason === "end_turn") {
+      return message.content
+        .filter((block) => block.type === "text")
+        .map((block) => block.text)
+        .join("\n")
+        .trim();
+    }
+    console.error(`Caption troncata con max_tokens=${maxTokens} (stop_reason: ${message.stop_reason}), riprovo.`);
   }
 
-  return message.content
-    .filter((block) => block.type === "text")
-    .map((block) => block.text)
-    .join("\n")
-    .trim();
+  throw new Error("Generazione caption troncata anche al secondo tentativo, non la pubblico a metà.");
 }

@@ -46,30 +46,34 @@ export async function generateTelegramPost(item, { avoidTexts = [] } = {}) {
 
 Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 
-  const message = await anthropic.messages.create({
-    model: "claude-sonnet-5",
-    max_tokens: 1500,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: "user", content: prompt }],
-  });
+  // La lunghezza reale della risposta varia da un tentativo all'altro: se
+  // viene troncata con un budget normale si riprova una volta con più
+  // margine, invece di fissare sempre un budget enorme.
+  for (const maxTokens of [900, 2000]) {
+    const message = await anthropic.messages.create({
+      model: "claude-sonnet-5",
+      max_tokens: maxTokens,
+      system: SYSTEM_PROMPT,
+      messages: [{ role: "user", content: prompt }],
+    });
 
-  if (message.stop_reason !== "end_turn") {
-    console.error("Uso token Telegram:", JSON.stringify(message.usage));
-    throw new Error(`Generazione Telegram troncata (stop_reason: ${message.stop_reason}), non pubblico un testo a metà.`);
+    if (message.stop_reason === "end_turn") {
+      const text = message.content
+        .filter((block) => block.type === "text")
+        .map((block) => block.text)
+        .join("\n")
+        .trim();
+
+      // Limite tecnico di Telegram per la didascalia di una foto: 1024
+      // caratteri. Non ci si affida solo al prompt — se lo sfora comunque,
+      // meglio un errore chiaro che un post rifiutato dall'API o troncato.
+      if (text.length > 1024) {
+        throw new Error(`Testo Telegram troppo lungo (${text.length}/1024 caratteri): ${text}`);
+      }
+      return text;
+    }
+    console.error(`Telegram troncato con max_tokens=${maxTokens} (stop_reason: ${message.stop_reason}), riprovo.`);
   }
 
-  const text = message.content
-    .filter((block) => block.type === "text")
-    .map((block) => block.text)
-    .join("\n")
-    .trim();
-
-  // Limite tecnico di Telegram per la didascalia di una foto: 1024 caratteri.
-  // Non ci si affida solo al prompt — se lo sfora comunque, meglio un errore
-  // chiaro che un post rifiutato dall'API o tagliato a metà.
-  if (text.length > 1024) {
-    throw new Error(`Testo Telegram troppo lungo (${text.length}/1024 caratteri): ${text}`);
-  }
-
-  return text;
+  throw new Error("Generazione Telegram troncata anche al secondo tentativo, non pubblico un testo a metà.");
 }

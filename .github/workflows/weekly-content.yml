@@ -20,15 +20,21 @@ name: Weekly content (Telegram + newsletter)
 
 on:
   schedule:
-    # 08:22 UTC, non 08:00 in punto: stesso motivo del post social (vedi
-    # social-autopost.yml) — evita la congestione dei cron su minuti tondi.
-    # È vicino al post social del lunedì (08:17 UTC) ma non identico, per non
-    # far partire due workflow nello stesso secondo.
-    - cron: '22 8 * * 1' # lunedì alle 08:22 UTC (~09:22/10:22 ora italiana)
+    # Tre orari lunedì mattina, non uno solo: il cron di GitHub su repository
+    # poco attivi può partire con ore di ritardo o saltare del tutto una
+    # finestra (successo al workflow social, stesso rischio qui). src/weekly.js
+    # salta da solo i run di troppo se si è già generato oggi.
+    - cron: '22 8 * * 1'  # lunedì alle 08:22 UTC (~09:22/10:22 ora italiana)
+    - cron: '42 10 * * 1' # ripescaggio alle 10:42 UTC
+    - cron: '2 14 * * 1'  # ultimo ripescaggio alle 14:02 UTC
   workflow_dispatch: {}
 
 permissions:
   contents: write
+
+concurrency:
+  group: weekly-content
+  cancel-in-progress: false
 
 jobs:
   weekly:
