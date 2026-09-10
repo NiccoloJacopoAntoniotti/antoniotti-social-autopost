@@ -60,6 +60,10 @@ function buildOverlaySvg({ title, whatsappLine, siteDomain }) {
   `;
 }
 
+// Spazio riservato in basso alla fascia di testo: il prodotto non deve mai
+// finirci sotto. Tenuto largo perché il titolo può occupare fino a 3 righe.
+const TEXT_BAND_RESERVE = 620;
+
 export async function buildStoryImage({ imageUrl, title, whatsappNumber, siteDomain, logoPath }) {
   const [sourceRes, logoBuffer] = await Promise.all([
     fetch(imageUrl),
@@ -68,8 +72,30 @@ export async function buildStoryImage({ imageUrl, title, whatsappNumber, siteDom
   if (!sourceRes.ok) throw new Error(`Impossibile scaricare l'immagine prodotto: ${sourceRes.status}`);
   const sourceBuffer = Buffer.from(await sourceRes.arrayBuffer());
 
-  const background = await sharp(sourceBuffer)
+  // Le foto prodotto sono quasi sempre quadrate/orizzontali: forzarle a
+  // riempire un riquadro 9:16 con "cover" tagliava via pezzi di prodotto in
+  // modo imprevedibile. Ora il prodotto resta sempre intero (fit "inside"),
+  // centrato sopra uno sfondo sfumato ricavato dalla stessa foto.
+  const backdrop = await sharp(sourceBuffer)
     .resize(WIDTH, HEIGHT, { fit: "cover", position: "attention" })
+    .blur(45)
+    .modulate({ brightness: 0.55 })
+    .toBuffer();
+
+  const productAreaHeight = HEIGHT - TEXT_BAND_RESERVE;
+  const product = await sharp(sourceBuffer)
+    .resize(WIDTH - 120, productAreaHeight - 120, {
+      fit: "inside",
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    })
+    .png() // serve l'alpha per la trasparenza: il formato originale (JPEG) non la supporta
+    .toBuffer();
+  const productMeta = await sharp(product).metadata();
+  const productLeft = Math.round((WIDTH - productMeta.width) / 2);
+  const productTop = Math.round((productAreaHeight - productMeta.height) / 2);
+
+  const background = await sharp(backdrop)
+    .composite([{ input: product, left: productLeft, top: productTop }])
     .toBuffer();
 
   const logo = await sharp(logoBuffer)
