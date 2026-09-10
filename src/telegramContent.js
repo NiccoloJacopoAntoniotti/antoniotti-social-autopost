@@ -22,6 +22,10 @@ Regole assolute:
   verificabile in questo contesto, e darlo per certo sarebbe un'informazione tecnica sbagliata a un
   cliente reale. Se il discorso tocca la compatibilità, trasformalo sempre in invito a scrivere con
   la targa.
+- Spiega SOLO cosa fa il componente in base alla descrizione fornita, se c'è. Il nome di un
+  prodotto può ingannare (es. "Ceramic Power Liquid" non c'entra nulla con vetri o carrozzeria):
+  non indovinare mai la funzione dal nome. Senza descrizione, resta sul generico invece di
+  inventare specifiche tecniche.
 - NON inventare intervalli di sostituzione precisi, specifiche tecniche o numeri (km, mesi) se non
   sei sicuro: resta su indicazioni generiche ("quando noti X, è il momento di farlo controllare").
 - Zero linguaggio da ufficio marketing ("scopri la nostra selezione", "qualità e professionalità").
@@ -42,7 +46,12 @@ export async function generateTelegramPost(item, { avoidTexts = [] } = {}) {
         .join("\n")}`
     : "";
 
+  const descriptionBlock = item.description
+    ? `Descrizione reale dal sito (unica fonte per capire cosa fa, usa solo questi fatti): ${item.description}`
+    : `Nessuna descrizione disponibile: NON indovinare a cosa serve dal nome, resta generico.`;
+
   const prompt = `Componente da spiegare questa settimana: ${item.title}
+${descriptionBlock}
 
 Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 

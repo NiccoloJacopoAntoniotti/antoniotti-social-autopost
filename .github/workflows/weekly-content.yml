@@ -1,14 +1,11 @@
 # Genera 1 volta a settimana il contenuto "Il ricambio della settimana" per
-# Telegram + newsletter, riusando lo stesso motore di selezione prodotto del
-# post social (src/picker.js), con un prompt diverso per canale.
+# Telegram, riusando lo stesso motore di selezione prodotto del post social
+# (src/picker.js).
 #
 # Di default lavora in modalità BOZZA (WEEKLY_DRAFT_MODE non impostata, o
-# impostata a qualsiasi valore diverso da "false"): genera i testi, li scrive
-# in data/weekly-draft.md e li committa nel repo, senza pubblicare nulla di
-# reale né su Telegram né altrove. La newsletter resta SEMPRE bozza da
-# incollare a mano in Shopify Email (non esiste un'API per inviarla in
-# automatico) — è la soluzione più semplice ed economica, già inclusa nel
-# piano Shopify, senza attivare abbonamenti esterni.
+# impostata a qualsiasi valore diverso da "false"): genera il testo, lo scrive
+# in data/weekly-draft.md e lo committa nel repo, senza pubblicare nulla di
+# reale su Telegram.
 #
 # Secrets da configurare nel repository GitHub (Settings -> Secrets -> Actions),
 # in aggiunta a quelli già usati dal workflow "Social autopost":
@@ -16,7 +13,7 @@
 #   TELEGRAM_BOT_TOKEN       (solo se WEEKLY_DRAFT_MODE=false) token da @BotFather
 #   TELEGRAM_CHANNEL_ID      (solo se WEEKLY_DRAFT_MODE=false) es. @antoniottiautoricambi
 
-name: Weekly content (Telegram + newsletter)
+name: Weekly content (Telegram)
 
 on:
   schedule:

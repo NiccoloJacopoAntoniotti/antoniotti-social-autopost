@@ -25,6 +25,11 @@ Regole di scrittura che segui sempre:
   tipo #car #auto #instagood.
 - Non menzioni mai un prezzo specifico (il listino non è nel prompt): per il costo rimandi
   sempre al contatto WhatsApp ("ti diciamo il prezzo appena sappiamo il modello", ecc.).
+- Scrivi SOLO cosa fa il prodotto, a cosa serve o che problema risolve se compare nella
+  descrizione fornita. Il nome di un prodotto può ingannare (es. "Ceramic Power Liquid" non
+  ha niente a che vedere con vetri o ceramica per carrozzeria): non indovinare mai la
+  funzione dal nome. Se non ricevi una descrizione, resta sul generico (categoria,
+  invito a scrivere per sapere se è compatibile) invece di inventare specifiche.
 - Rispondi SOLO con il testo della caption pronta da incollare, niente markdown, niente
   spiegazioni.`;
 
@@ -37,8 +42,13 @@ export async function generateCaption(item, { avoidCaptions = [] } = {}) {
         .join("\n")}`
     : "";
 
+  const descriptionBlock = item.description
+    ? `- Descrizione reale dal sito (unica fonte per capire cosa fa il prodotto, usa solo questi fatti): ${item.description}`
+    : `- Nessuna descrizione disponibile: NON indovinare a cosa serve dal nome, resta generico.`;
+
   const prompt = `Prodotto dal catalogo da promuovere:
 - Nome: ${item.title}
+${descriptionBlock}
 
 Il link da inserire per contattare via WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 

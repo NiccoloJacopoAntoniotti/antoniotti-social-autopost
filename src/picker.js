@@ -27,6 +27,7 @@ export async function pickNextItem(history) {
       key: `product:${p.id}`,
       title: p.title,
       price: p.price,
+      description: p.description,
       imageUrl: p.imageUrl,
       productUrl: p.productUrl,
       collectionHandle: p.collectionHandle,

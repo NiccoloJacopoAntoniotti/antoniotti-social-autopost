@@ -1,7 +1,6 @@
 import { pickNextItem } from "./picker.js";
 import { loadHistory, saveHistoryEntry, recentCaptions } from "./history.js";
 import { generateTelegramPost } from "./telegramContent.js";
-import { generateNewsletterEmail } from "./newsletterContent.js";
 import { postToTelegramChannel } from "./telegram.js";
 import { commitAndPush } from "./git.js";
 import { writeFile } from "node:fs/promises";
@@ -63,12 +62,8 @@ async function main() {
 
   const avoidTexts = recentCaptions(history, 4);
   const telegramText = await generateTelegramPost(item, { avoidTexts });
-  const newsletter = await generateNewsletterEmail(item, {
-    avoidSubjects: history.slice(-4).map((h) => h.newsletterSubject).filter(Boolean),
-  });
 
   console.log("Telegram generato:\n" + telegramText);
-  console.log("\nNewsletter generata — oggetto: " + newsletter.subject);
 
   const draftMarkdown = `# Contenuto della settimana — ${new Date().toISOString().slice(0, 10)}
 
@@ -80,11 +75,6 @@ Foto: ${item.imageUrl}
 Stato: ${DRAFT_MODE ? "BOZZA — non pubblicato, da rivedere" : "pubblicato automaticamente"}
 
 ${telegramText}
-
-## Newsletter (da incollare in Shopify Email — invio sempre manuale)
-Oggetto: ${newsletter.subject}
-
-${newsletter.body}
 `;
 
   await writeFile(DRAFT_ABSOLUTE_PATH, draftMarkdown);
@@ -100,7 +90,6 @@ ${newsletter.body}
       title: item.title,
       kind: item.kind,
       caption: telegramText,
-      newsletterSubject: newsletter.subject,
       collectionHandle: item.collectionHandle,
       draftOnly: DRAFT_MODE,
     },
@@ -109,7 +98,7 @@ ${newsletter.body}
 
   commitAndPush(
     [DRAFT_RELATIVE_PATH, "data/weekly-history.json"],
-    "chore: aggiorna bozza contenuto settimanale (Telegram + newsletter)"
+    "chore: aggiorna bozza contenuto settimanale (Telegram)"
   );
 
   if (!DRAFT_MODE) {

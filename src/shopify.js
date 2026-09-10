@@ -46,6 +46,19 @@ async function shopifyFetch(path) {
   return res.json();
 }
 
+// Toglie i tag HTML dalla descrizione prodotto (Shopify la salva come rich
+// text) e la accorcia: serve solo a dare fatti veri alla generazione della
+// caption, non deve diventare un prompt enorme.
+function plainDescription(bodyHtml) {
+  if (!bodyHtml) return "";
+  const text = bodyHtml
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return text.length > 600 ? text.slice(0, 600) + "…" : text;
+}
+
 async function findCollectionIdsByHandle(handles) {
   const wanted = new Set(handles);
   const found = new Map();
@@ -65,7 +78,7 @@ export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
   const products = [];
   for (const [handle, collectionId] of idsByHandle) {
     const data = await shopifyFetch(
-      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants,tags`
+      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants,tags,body_html`
     );
     for (const product of data.products ?? []) {
       if (!product.images?.length) continue; // niente immagine, niente post
@@ -78,6 +91,7 @@ export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
         productUrl: `https://${process.env.SHOPIFY_PUBLIC_DOMAIN}/products/${product.handle}`,
         collectionHandle: handle,
         tags: (product.tags ?? "").split(",").map((t) => t.trim()).filter(Boolean),
+        description: plainDescription(product.body_html),
       });
     }
   }

@@ -119,7 +119,10 @@ export async function buildStoryImage({ imageUrl, title, whatsappNumber, siteDom
   return sharp(background)
     .composite([
       { input: Buffer.from(overlaySvg), top: 0, left: 0 },
-      { input: logo, top: 60, left: WIDTH - LOGO_SIZE - 60 },
+      // top: 260, non 60 — nei primi ~250px la storia è coperta dall'interfaccia
+      // di Instagram (nome account, orario, barra di avanzamento): un logo più
+      // in alto ci finisce sotto e sembra tagliato/sfasato.
+      { input: logo, top: 260, left: WIDTH - LOGO_SIZE - 60 },
     ])
     .jpeg({ quality: 90 })
     .toBuffer();
