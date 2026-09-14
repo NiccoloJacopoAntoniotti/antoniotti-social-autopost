@@ -37,6 +37,25 @@ Regole assolute:
 - Rispondi SOLO col testo pronto da incollare su Telegram (il **grassetto** stile Markdown è
   supportato e benvenuto per 1-2 parole chiave), niente spiegazioni fuori dal testo.`;
 
+async function shortenText(text, limit) {
+  const message = await anthropic.messages.create({
+    model: "claude-sonnet-5",
+    max_tokens: 900,
+    system: SYSTEM_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: `Questo testo per Telegram supera il limite di ${limit} caratteri (è lungo ${text.length}):\n\n${text}\n\nRiscrivilo più corto, sotto i ${limit} caratteri, mantenendo struttura, tono e messaggio (taglia dettagli secondari, non il senso).`,
+      },
+    ],
+  });
+  return message.content
+    .filter((block) => block.type === "text")
+    .map((block) => block.text)
+    .join("\n")
+    .trim();
+}
+
 export async function generateTelegramPost(item, { avoidTexts = [] } = {}) {
   const whatsappLink = `https://wa.me/${process.env.WHATSAPP_NUMBER}`;
 
@@ -55,6 +74,8 @@ ${descriptionBlock}
 
 Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink}` + varietyNote;
 
+  const TELEGRAM_LIMIT = 1024; // limite tecnico di Telegram per la didascalia di una foto
+
   // La lunghezza reale della risposta varia da un tentativo all'altro: se
   // viene troncata con un budget normale si riprova una volta con più
   // margine, invece di fissare sempre un budget enorme.
@@ -67,17 +88,23 @@ Il link da inserire nel CTA finale verso WhatsApp è esattamente: ${whatsappLink
     });
 
     if (message.stop_reason === "end_turn") {
-      const text = message.content
+      let text = message.content
         .filter((block) => block.type === "text")
         .map((block) => block.text)
         .join("\n")
         .trim();
 
-      // Limite tecnico di Telegram per la didascalia di una foto: 1024
-      // caratteri. Non ci si affida solo al prompt — se lo sfora comunque,
-      // meglio un errore chiaro che un post rifiutato dall'API o troncato.
-      if (text.length > 1024) {
-        throw new Error(`Testo Telegram troppo lungo (${text.length}/1024 caratteri): ${text}`);
+      // Il prompt chiede di restare sotto gli 850 caratteri, ma i modelli non
+      // rispettano sempre alla lettera un vincolo di conteggio: se il testo
+      // supera comunque il limite tecnico di Telegram, si chiede una riscrittura
+      // più corta invece di scartare tutto il lavoro fatto finora.
+      if (text.length > TELEGRAM_LIMIT) {
+        console.error(`Testo Telegram lungo ${text.length}/${TELEGRAM_LIMIT}, chiedo di accorciarlo.`);
+        text = await shortenText(text, TELEGRAM_LIMIT - 50);
+      }
+
+      if (text.length > TELEGRAM_LIMIT) {
+        throw new Error(`Testo Telegram ancora troppo lungo dopo l'accorciamento (${text.length}/${TELEGRAM_LIMIT} caratteri): ${text}`);
       }
       return text;
     }
