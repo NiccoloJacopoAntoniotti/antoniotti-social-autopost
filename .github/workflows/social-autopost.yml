@@ -1,6 +1,5 @@
-# Pubblica automaticamente ogni 2 giorni (giorni dispari del mese, es. 1, 3,
-# 5, 7...) su Instagram (feed + storia) e Facebook per antoniotti-autoricambi,
-# senza intervento manuale.
+# Pubblica automaticamente OGNI GIORNO su Instagram (feed + storia) e Facebook
+# per antoniotti-autoricambi, senza intervento manuale.
 #
 # Secrets da configurare nel repository GitHub (Settings -> Secrets -> Actions):
 #   SHOPIFY_STORE_DOMAIN     es. antoniotti-autoricambi.myshopify.com
@@ -17,31 +16,36 @@ name: Social autopost
 
 on:
   schedule:
-    # Il tentativo "vero" è alle 8 del mattino (ora italiana). Gli altri tre
-    # sono ripescaggi di sicurezza, sparsi nell'arco della giornata (non
-    # ammassati in una manciata di minuti): il cron di GitHub su repository
-    # poco attivi può a volte perdere una finestra intera, quindi più i
-    # ripescaggi sono vicini tra loro più rischiano di sparire tutti insieme
-    # (è già successo). src/index.js salta da solo i run di troppo se si è
-    # già pubblicato oggi, quindi questi sono ripescaggi sicuri, non doppioni.
+    # Il tentativo "vero" è alle 8 del mattino (ora italiana). Gli altri
+    # sono ripescaggi di sicurezza, sparsi su tutta la giornata (mattina,
+    # pranzo, pomeriggio, sera) e non ammassati in una manciata di minuti:
+    # il cron di GitHub su repository poco attivi può partire con ore di
+    # ritardo o saltare del tutto una finestra — è già successo più volte,
+    # anche con tre ripescaggi nella stessa mattina. Più i ripescaggi sono
+    # distribuiti nell'arco del giorno, più è difficile che spariscano tutti
+    # insieme. src/index.js salta da solo i run di troppo se si è già
+    # pubblicato oggi, quindi questi sono ripescaggi sicuri, non doppioni.
     #
     # GitHub Actions gira sempre in UTC, quindi ci sono due blocchi identici
     # spostati di un'ora per compensare da soli il cambio ora legale/solare
-    # italiana, senza doverli aggiornare due volte l'anno. "*/2" sul giorno
-    # del mese vuol dire "ogni 2 giorni" (1, 3, 5, 7...).
+    # italiana, senza doverli aggiornare due volte l'anno.
     #
     # I minuti NON sono mai ":00": è il momento di picco globale su GitHub
     # Actions (tutti i cron del mondo scattano "in punto"), quindi è anche il
     # momento con più probabilità che una schedulazione venga persa o
     # ritardata parecchio. Stare fuori dall'ora esatta riduce il rischio.
-    - cron: '7 6 */2 3-10 *'        # ora legale (mar-ott): ~08:07 ora italiana
-    - cron: '23 7 */2 3-10 *'       # ripescaggio ~09:23 (ora legale)
-    - cron: '41 9 */2 3-10 *'       # ripescaggio ~11:41 (ora legale)
-    - cron: '53 12 */2 3-10 *'      # ultimo ripescaggio ~14:53 (ora legale)
-    - cron: '7 7 */2 11,12,1,2 *'   # ora solare (nov-feb): ~08:07 ora italiana
-    - cron: '23 8 */2 11,12,1,2 *'  # ripescaggio ~09:23 (ora solare)
-    - cron: '41 10 */2 11,12,1,2 *' # ripescaggio ~11:41 (ora solare)
-    - cron: '53 13 */2 11,12,1,2 *' # ultimo ripescaggio ~14:53 (ora solare)
+    - cron: '7 6 * 3-10 *'    # ora legale (mar-ott): ~08:07 ora italiana
+    - cron: '23 8 * 3-10 *'   # ripescaggio ~10:23 (ora legale)
+    - cron: '41 10 * 3-10 *'  # ripescaggio ~12:41 (ora legale)
+    - cron: '53 12 * 3-10 *'  # ripescaggio ~14:53 (ora legale)
+    - cron: '17 15 * 3-10 *'  # ripescaggio ~17:17 (ora legale)
+    - cron: '38 18 * 3-10 *'  # ultimo ripescaggio ~20:38 (ora legale)
+    - cron: '7 7 * 11,12,1,2 *'    # ora solare (nov-feb): ~08:07 ora italiana
+    - cron: '23 9 * 11,12,1,2 *'   # ripescaggio ~10:23 (ora solare)
+    - cron: '41 11 * 11,12,1,2 *'  # ripescaggio ~12:41 (ora solare)
+    - cron: '53 13 * 11,12,1,2 *'  # ripescaggio ~14:53 (ora solare)
+    - cron: '17 16 * 11,12,1,2 *'  # ripescaggio ~17:17 (ora solare)
+    - cron: '38 19 * 11,12,1,2 *'  # ultimo ripescaggio ~20:38 (ora solare)
   workflow_dispatch: {}
 
 permissions:
