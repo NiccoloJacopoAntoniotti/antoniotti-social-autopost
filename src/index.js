@@ -2,15 +2,39 @@ import { generateCaption } from "./caption.js";
 import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js";
 import { loadHistory, saveHistoryEntry, recentCaptions } from "./history.js";
 import { pickNextItem } from "./picker.js";
-import { buildStoryImage } from "./storyImage.js";
+import { buildStoryImage, buildFeedImage } from "./storyImage.js";
 import { commitAndPush } from "./git.js";
 import { writeFile } from "node:fs/promises";
 
-// Repo pubblico usato anche come hosting per l'immagine generata delle storie
-// (Instagram richiede un URL pubblico, raw.githubusercontent.com lo fornisce
-// gratis per i repo pubblici).
+// Repo pubblico usato anche come hosting per le immagini generate (storie e,
+// quando serve, la versione "sicura" del feed) — Instagram richiede un URL
+// pubblico, raw.githubusercontent.com lo fornisce gratis per i repo pubblici.
 const REPO = "NiccoloJacopoAntoniotti/antoniotti-social-autopost";
 const STORY_IMAGE_PATH = "data/story-image.jpg";
+const FEED_IMAGE_PATH = "data/feed-image.jpg";
+
+// Instagram rifiuta a monte (errore esplicito, non un warning) le foto con
+// proporzioni fuori dal range 4:5 - 1.91:1: capita con alcune foto prodotto
+// molto strette o allungate. Invece di far fallire tutto il post, si tenta
+// prima con la foto originale (la maggior parte va bene così com'è) e solo
+// se Meta risponde con questo errore specifico si ricompone la foto in un
+// quadrato sicuro e si riprova una volta.
+async function postInstagramFeedWithFallback(item, caption) {
+  try {
+    await postToInstagram({ imageUrl: item.imageUrl, caption });
+  } catch (err) {
+    if (!err.message?.includes('"code":36003')) throw err;
+    console.error("Instagram ha rifiutato le proporzioni della foto originale, la ricompongo in formato quadrato e riprovo.");
+
+    const feedBuffer = await buildFeedImage(item.imageUrl);
+    await writeFile(new URL(`../${FEED_IMAGE_PATH}`, import.meta.url), feedBuffer);
+    commitAndPush(FEED_IMAGE_PATH, "chore: aggiorna immagine feed social autopost (proporzioni originali non supportate)");
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // dà tempo alla CDN di propagare il file
+
+    const feedImageUrl = `https://raw.githubusercontent.com/${REPO}/main/${FEED_IMAGE_PATH}?t=${Date.now()}`;
+    await postToInstagram({ imageUrl: feedImageUrl, caption });
+  }
+}
 
 function formatWhatsappNumber(raw) {
   // Numeri italiani: 39 + 3 + 3 + 4 cifre (es. 393272436497 -> +39 327 243 6497)
@@ -69,7 +93,7 @@ async function main() {
   // Il post sul feed Instagram è la pubblicazione "principale": appena riesce,
   // salviamo subito lo storico. Così, se storia o Facebook falliscono dopo,
   // un eventuale nuovo tentativo non ripubblica lo stesso prodotto da capo.
-  await postToInstagram({ imageUrl: item.imageUrl, caption });
+  await postInstagramFeedWithFallback(item, caption);
   await saveHistoryEntry({
     key: item.key,
     title: item.title,

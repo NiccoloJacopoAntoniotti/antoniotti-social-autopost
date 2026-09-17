@@ -64,6 +64,43 @@ function buildOverlaySvg({ title, whatsappLine, siteDomain }) {
 // finirci sotto. Tenuto largo perché il titolo può occupare fino a 3 righe.
 const TEXT_BAND_RESERVE = 620;
 
+// Instagram accetta nel feed solo proporzioni tra 4:5 e 1.91:1: una foto
+// prodotto molto stretta o molto allungata (es. un adattatore lungo e
+// sottile) viene rifiutata a monte con un errore esplicito, non un warning.
+// Il quadrato 1:1 è sempre dentro il range accettato qualunque sia la forma
+// della foto originale, quindi è un fallback sicuro da usare solo quando la
+// foto originale viene rifiutata (vedi index.js).
+const FEED_SIZE = 1080;
+
+export async function buildFeedImage(imageUrl) {
+  const sourceRes = await fetch(imageUrl);
+  if (!sourceRes.ok) throw new Error(`Impossibile scaricare l'immagine prodotto: ${sourceRes.status}`);
+  const sourceBuffer = Buffer.from(await sourceRes.arrayBuffer());
+
+  const backdrop = await sharp(sourceBuffer)
+    .resize(FEED_SIZE, FEED_SIZE, { fit: "cover", position: "attention" })
+    .blur(45)
+    .modulate({ brightness: 0.6 })
+    .toBuffer();
+
+  const margin = 80;
+  const product = await sharp(sourceBuffer)
+    .resize(FEED_SIZE - margin * 2, FEED_SIZE - margin * 2, {
+      fit: "inside",
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    })
+    .png()
+    .toBuffer();
+  const productMeta = await sharp(product).metadata();
+  const left = Math.round((FEED_SIZE - productMeta.width) / 2);
+  const top = Math.round((FEED_SIZE - productMeta.height) / 2);
+
+  return sharp(backdrop)
+    .composite([{ input: product, left, top }])
+    .jpeg({ quality: 90 })
+    .toBuffer();
+}
+
 export async function buildStoryImage({ imageUrl, title, whatsappNumber, siteDomain, logoPath }) {
   const [sourceRes, logoBuffer] = await Promise.all([
     fetch(imageUrl),
