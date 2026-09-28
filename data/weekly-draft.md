@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-09-21
+# Contenuto della settimana — 2026-09-28
 
 ## Prodotto scelto
-Arexons System 35A72 e MotorBlack, sigillanti — collezione: social-in-evidenza
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/Screenshot2026-09-01alle23.04.54.png?v=1788296701
+CASCO DA MOTO MOTO CABERG - DUKE II — collezione: caschi-da-moto
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_2_6692ab07-eed3-4e2e-8f1d-50089155e79c.png?v=1656081667
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Perdite d'olio da un raccordo o da una giunzione del motore, anche dopo aver stretto bene?
+Se in autostrada la visiera si appanna appena si abbassa la temperatura, o dopo un'ora di guida senti il casco stringere alle tempie, spesso non è il modello sbagliato ma la taglia.
 
-Non è un ricambio da cambiare, ma un sigillante da scegliere giusto. L'**Arexons System** è pensato per raccordi e filettature nei circuiti oleodinamici, per garantire tenuta sulle parti filettate. Il **MotorBlack** è invece una pasta nera per superfici del motore, dove servono guarnizioni o accoppiamenti a tenuta.
+Un integrale come il Caberg Duke II ha calotta in ABS ad alto assorbimento d'urto e doppia visiera, trasparente e fumé, con sgancio rapido e Pinlock di serie contro l'appannamento. L'interno è estraibile e lavabile, comodo per chi lo usa spesso. La fibbia micrometrica regola la chiusura in modo più preciso rispetto ai ganci classici, ed è già predisposto per l'interfono.
 
-Sono due prodotti diversi, non intercambiabili: usare quello sbagliato nel punto sbagliato spesso vuol dire smontare tutto e ripetere il lavoro. Online capita di prendere "il sigillante" senza sapere se serve per filettature o superfici, e la perdita torna dopo poco.
+L'errore più comune comprando online: guardare solo la sigla S/M/L senza misurare davvero la circonferenza della testa, che cambia da persona a persona anche a parità di taglia dichiarata.
 
-Se non sei sicuro di quale ti serve, scrivici descrivendo il problema: ti diciamo quale usare e ti seguiamo anche dopo l'acquisto.
+Non diamo mai per scontato che una taglia vada bene senza verificarla — scrivici la tua misura, ti aiutiamo a capire quella giusta e restiamo a disposizione anche dopo l'acquisto.
 
-📲 https://wa.me/393272436497
+📲 Scrivici su WhatsApp: https://wa.me/393272436497
