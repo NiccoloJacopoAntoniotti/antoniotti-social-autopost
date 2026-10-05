@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-09-28
+# Contenuto della settimana — 2026-10-05
 
 ## Prodotto scelto
-CASCO DA MOTO MOTO CABERG - DUKE II — collezione: caschi-da-moto
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_2_6692ab07-eed3-4e2e-8f1d-50089155e79c.png?v=1656081667
+CASCO DA MOTO MOTO CABERG - RIVIERA V4 ELITE — collezione: caschi-da-moto
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_10_c218f88a-0ebd-46b0-b833-96467cf3206b.png?v=1656088758
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Se in autostrada la visiera si appanna appena si abbassa la temperatura, o dopo un'ora di guida senti il casco stringere alle tempie, spesso non è il modello sbagliato ma la taglia.
+Dopo un'ora in sella il casco ti stringe le tempie, oppure balla e senti il vento ai lati?
 
-Un integrale come il Caberg Duke II ha calotta in ABS ad alto assorbimento d'urto e doppia visiera, trasparente e fumé, con sgancio rapido e Pinlock di serie contro l'appannamento. L'interno è estraibile e lavabile, comodo per chi lo usa spesso. La fibbia micrometrica regola la chiusura in modo più preciso rispetto ai ganci classici, ed è già predisposto per l'interfono.
+Spesso non è il casco, è la taglia scelta a occhio. Il Riviera V4 Elite di Caberg è un demi-jet con calotta in ABS, disponibile in due misure di guscio per adattarsi meglio alla forma della testa invece del classico "guscio unico". Ha doppia visiera (trasparente e fumé), interno estraibile e lavabile, e fibbia micrometrica per regolare la chiusura con precisione invece che a scatti fissi.
 
-L'errore più comune comprando online: guardare solo la sigla S/M/L senza misurare davvero la circonferenza della testa, che cambia da persona a persona anche a parità di taglia dichiarata.
+Errore comune comprando online: fidarsi della sigla "S" o "M" senza sapere che ogni marca misura la calotta a modo suo, quindi lo stesso numero può calzare in modo diverso da un casco all'altro.
 
-Non diamo mai per scontato che una taglia vada bene senza verificarla — scrivici la tua misura, ti aiutiamo a capire quella giusta e restiamo a disposizione anche dopo l'acquisto.
+Se non sei sicuro della taglia o vuoi un parere su questo modello, scrivici con qualche dettaglio in più: ti aiutiamo a capire cosa calza davvero, anche dopo l'acquisto 🪖
 
-📲 Scrivici su WhatsApp: https://wa.me/393272436497
+👉 https://wa.me/393272436497
