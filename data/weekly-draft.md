@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-10-05
+# Contenuto della settimana — 2026-10-12
 
 ## Prodotto scelto
-CASCO DA MOTO MOTO CABERG - RIVIERA V4 ELITE — collezione: caschi-da-moto
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_10_c218f88a-0ebd-46b0-b833-96467cf3206b.png?v=1656088758
+Spazzola tergicristallo BOSH - AP32U - 800mm/32'' — collezione: tergicristallo-bosh
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_1_e65f65bd-1503-4206-b6bb-622398e5c0a6.png?v=1663692914
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Dopo un'ora in sella il casco ti stringe le tempie, oppure balla e senti il vento ai lati?
+Quando piove forte e il parabrezza resta "sporco" anche col tergicristallo acceso, il problema spesso non è il vetro.
 
-Spesso non è il casco, è la taglia scelta a occhio. Il Riviera V4 Elite di Caberg è un demi-jet con calotta in ABS, disponibile in due misure di guscio per adattarsi meglio alla forma della testa invece del classico "guscio unico". Ha doppia visiera (trasparente e fumé), interno estraibile e lavabile, e fibbia micrometrica per regolare la chiusura con precisione invece che a scatti fissi.
+La spazzola tergicristallo è la gomma che scorre sul parabrezza per pulirlo da pioggia, polvere e insetti. Con il tempo si indurisce o perde aderenza: a quel punto lascia righe, aloni, o fa quel rumore di "slitta" sul vetro. Se noti striature o zone che restano bagnate, è il momento di farla controllare.
 
-Errore comune comprando online: fidarsi della sigla "S" o "M" senza sapere che ogni marca misura la calotta a modo suo, quindi lo stesso numero può calzare in modo diverso da un casco all'altro.
+Non tutte le spazzole sono uguali: lunghezza, tipo di attacco e sistema di fissaggio cambiano da veicolo a veicolo. L'errore più comune comprando online è guardare solo la misura in mm senza verificare l'aggancio giusto, ritrovandosi poi con un pezzo che non si fissa bene.
 
-Se non sei sicuro della taglia o vuoi un parere su questo modello, scrivici con qualche dettaglio in più: ti aiutiamo a capire cosa calza davvero, anche dopo l'acquisto 🪖
+Per questo prima di un acquisto è meglio scriverci con targa o modello: verifichiamo noi l'abbinamento corretto, e restiamo disponibili anche dopo per dubbi sul montaggio. 🧽
 
-👉 https://wa.me/393272436497
+Scrivici su WhatsApp 👉 https://wa.me/393272436497
