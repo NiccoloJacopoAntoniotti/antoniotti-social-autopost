@@ -105,3 +105,69 @@ export async function postToFacebook({ imageUrl, caption }) {
     access_token: pageAccessToken,
   });
 }
+
+// ---------------------------------------------------------------------------
+// Contenuti "straordinari" (lancio nuovo sito): carosello e post multi-foto.
+// ---------------------------------------------------------------------------
+
+// Carosello Instagram: ogni slide è un "contenitore figlio" da elaborare
+// prima di creare il contenitore padre (media_type CAROUSEL). Tutte le slide
+// devono avere le stesse proporzioni della prima (qui 4:5, 1080x1350).
+export async function postToInstagramCarousel({ imageUrls, caption }) {
+  const igUserId = process.env.META_IG_USER_ID;
+  const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
+
+  const children = [];
+  for (const imageUrl of imageUrls) {
+    const { id } = await graphPost(`${igUserId}/media`, {
+      image_url: imageUrl,
+      is_carousel_item: true,
+      access_token: accessToken,
+    });
+    await waitUntilMediaReady(id, accessToken);
+    children.push(id);
+  }
+
+  const { id: creationId } = await graphPost(`${igUserId}/media`, {
+    media_type: "CAROUSEL",
+    children: children.join(","),
+    caption,
+    access_token: accessToken,
+  });
+  await waitUntilMediaReady(creationId, accessToken);
+
+  return graphPost(`${igUserId}/media_publish`, {
+    creation_id: creationId,
+    access_token: accessToken,
+  });
+}
+
+export async function getInstagramPermalink(mediaId) {
+  const { permalink } = await graphGet(
+    `${mediaId}?fields=permalink&access_token=${process.env.META_PAGE_ACCESS_TOKEN}`
+  );
+  return permalink;
+}
+
+// Post Facebook con più foto: ogni foto si carica come "non pubblicata" e poi
+// si allegano tutte a un unico post sul feed della Pagina.
+export async function postToFacebookMultiPhoto({ imageUrls, caption }) {
+  const pageId = process.env.META_PAGE_ID;
+  const pageAccessToken = await getPageAccessToken(pageId, process.env.META_PAGE_ACCESS_TOKEN);
+
+  const photoIds = [];
+  for (const imageUrl of imageUrls) {
+    const { id } = await graphPost(`${pageId}/photos`, {
+      url: imageUrl,
+      published: false,
+      access_token: pageAccessToken,
+    });
+    photoIds.push(id);
+  }
+
+  return graphPost(`${pageId}/feed`, {
+    message: caption,
+    attached_media: photoIds.map((id) => ({ media_fbid: id })),
+    access_token: pageAccessToken,
+  });
+}

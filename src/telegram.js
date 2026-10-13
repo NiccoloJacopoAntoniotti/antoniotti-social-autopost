@@ -24,3 +24,31 @@ export async function postToTelegramChannel({ imageUrl, caption }) {
   }
   return res.json();
 }
+
+// Foto con didascalia in HTML e pulsanti-link sotto il messaggio (solo i post
+// singoli supportano i pulsanti inline, non gli album). Restituisce il
+// messaggio pubblicato, da cui si ricava il link diretto al post.
+export async function postToTelegramChannelWithButtons({ imageUrl, captionHtml, buttons }) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHANNEL_ID;
+  if (!token || !chatId) {
+    throw new Error("TELEGRAM_BOT_TOKEN o TELEGRAM_CHANNEL_ID mancanti: impossibile pubblicare su Telegram.");
+  }
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      photo: imageUrl,
+      caption: captionHtml,
+      parse_mode: "HTML",
+      reply_markup: { inline_keyboard: [buttons.map((b) => ({ text: b.text, url: b.url }))] },
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Telegram API error ${res.status}: ${await res.text()}`);
+  }
+  return (await res.json()).result;
+}

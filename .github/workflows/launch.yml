@@ -1,0 +1,52 @@
+# Lancio una tantum del nuovo sito: carosello Instagram, storia Instagram,
+# post Facebook con 5 foto e messaggio Telegram con pulsanti.
+#
+# Si avvia solo a mano (Actions -> "Lancio nuovo sito" -> Run workflow), non
+# ha cron. Ha un proprio stato (data/launch-history.json) separato dai post
+# quotidiani: non occupa lo slot "già pubblicato oggi" e non viene bloccato da
+# un post ordinario già uscito. Rilanciarlo riprova solo i canali falliti.
+# Con dry_run=true controlla immagini e testi senza pubblicare nulla.
+
+name: Lancio nuovo sito
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true = solo verifica immagini e testi, nessuna pubblicazione"
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: launch-nuovo-sito
+  cancel-in-progress: false
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Configura git
+        run: |
+          git config user.name "social-autopost-bot"
+          git config user.email "actions@github.com"
+
+      - name: Pubblica il lancio
+        env:
+          META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          LAUNCH_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: node src/launch.js
