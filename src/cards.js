@@ -81,7 +81,7 @@ export function shortTitle(title) {
     t = t
       .split(" ")
       .map((w, i) => {
-        if (/\d/.test(w) || w.length <= 3 && i > 0 && !SMALL_WORDS.has(w.toLowerCase())) return w;
+        if (/[\d']/.test(w) || (w.length <= 3 && i > 0 && !SMALL_WORDS.has(w.toLowerCase()))) return w;
         const lower = w.toLowerCase();
         if (i > 0 && SMALL_WORDS.has(lower)) return lower;
         return lower.charAt(0).toUpperCase() + lower.slice(1);

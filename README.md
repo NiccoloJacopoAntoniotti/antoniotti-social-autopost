@@ -176,3 +176,39 @@ Tiene traccia dell'ultimo messaggio già gestito in
 `data/telegram-offset.json` (committato ad ogni run), così anche se il bot
 sta rispondendo a più persone in sequenza non ne perde né ne rilavora
 nessuno tra un'esecuzione e l'altra.
+
+
+## Grafica dei post e delle storie (nuovo sito, ott 2026)
+
+`src/cards.js` disegna feed (1080x1350, 4:5) e storia (1080x1920) con HTML/CSS
+reso da Chrome (`puppeteer-core`, usa il Chrome già presente su
+`ubuntu-latest`), nello stile del nuovo sito: sfondo scuro, prodotto sempre
+intero su riquadro bianco (mai deformato né tagliato, le foto piccole non
+vengono ingrandite oltre 2,2x), titolo accorciato (`shortTitle`: via codici e
+descrizioni dopo " - ") su al massimo 2-3 righe, un solo invito all'azione
+(pulsante WhatsApp con numero) e dominio. Se la grafica fallisce per
+qualunque motivo `src/index.js` ripiega sui generatori storici
+(`storyImage.js` / foto originale): un post non salta mai per la grafica.
+
+Per vedere l'effetto senza pubblicare nulla: Actions → "Anteprima grafica e
+fonti" → Run workflow; riepiloga quanti prodotti pubblicabili ci sono per
+collezione e allega feed/storia di prodotti a caso.
+
+## Fonti dei contenuti
+
+`FEATURED_COLLECTION_HANDLES` in `src/shopify.js` elenca le collezioni da cui
+pescano social e Telegram: tutte le collezioni del nuovo sito più le
+collezioni-marca storiche e la jolly. Un prodotto in più collezioni viene
+attribuito alla prima dell'elenco. Solo prodotti **attivi** (visibili sul
+sito) e mai archiviati; nella jolly sono ammesse anche le bozze. Le collezioni
+stagionali (`COLLECTION_SEASON` in `src/picker.js`) non escono fuori stagione.
+
+## Lancio una tantum del nuovo sito (13 ott 2026)
+
+`.github/workflows/launch.yml` + `src/launch.js` + `src/launchContent.js`:
+carosello Instagram (5 slide), storia, post Facebook con 5 foto e messaggio
+Telegram con pulsanti. Le immagini sono in `data/launch/`. Ha un proprio stato
+per canale in `data/launch-history.json`, separato da `posted-history.json`:
+non occupa lo slot del post quotidiano e rilanciarlo riprova solo i canali
+falliti, mai quelli già pubblicati. Con `dry_run=true` verifica immagini e
+testi senza pubblicare.
