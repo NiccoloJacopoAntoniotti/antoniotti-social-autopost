@@ -8,10 +8,21 @@ import { filterRecentlyPosted, filterCollectionCooldown } from "./history.js";
 const SEASON_TAG_WINTER = "stagione-inverno";
 const SEASON_TAG_SUMMER = "stagione-estate";
 
-function isOffSeason(tags) {
+// Collezioni intere che hanno senso solo in una stagione (oltre ai tag sui
+// singoli prodotti): in bassa stagione non vengono proposte.
+const COLLECTION_SEASON = {
+  "accessori-inverno-liquidi-auto": "inverno",
+  "abbigliamento-moto-inverno": "inverno",
+  "abbigliamento-moto-estate": "estate",
+};
+
+function isOffSeason(tags, collectionHandle) {
   const month = new Date().getMonth() + 1; // 1-12
-  if ([12, 1, 2].includes(month)) return tags.includes(SEASON_TAG_SUMMER); // inverno: niente prodotti estivi
-  if ([6, 7, 8].includes(month)) return tags.includes(SEASON_TAG_WINTER); // estate: niente prodotti invernali
+  const winter = [12, 1, 2].includes(month);
+  const summer = [6, 7, 8].includes(month);
+  const collectionSeason = COLLECTION_SEASON[collectionHandle];
+  if (winter) return tags.includes(SEASON_TAG_SUMMER) || collectionSeason === "estate"; // inverno: niente prodotti estivi
+  if (summer) return tags.includes(SEASON_TAG_WINTER) || collectionSeason === "inverno"; // estate: niente prodotti invernali
   return false; // primavera/autunno: nessun vincolo stagionale
 }
 
@@ -20,8 +31,8 @@ function isOffSeason(tags) {
 // così ogni canale ha la propria rotazione senza pescare per forza lo stesso
 // prodotto usato da un altro canale lo stesso giorno.
 export async function pickNextItem(history) {
-  const products = (await getFeaturedCollectionProducts({ limit: 10 }))
-    .filter((p) => !isOffSeason(p.tags))
+  const products = (await getFeaturedCollectionProducts())
+    .filter((p) => !isOffSeason(p.tags, p.collectionHandle))
     .map((p) => ({
       kind: "product",
       key: `product:${p.id}`,

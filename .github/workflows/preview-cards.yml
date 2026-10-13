@@ -1,0 +1,31 @@
+# Anteprima (mai pubblica nulla): riepilogo delle fonti del bot e prova della
+# grafica di feed/storia su prodotti a caso, caricata come allegato del run.
+name: Anteprima grafica e fonti
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installa dipendenze
+        run: npm install
+      - name: Genera anteprima
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_ADMIN_TOKEN: ${{ secrets.SHOPIFY_ADMIN_TOKEN }}
+          SHOPIFY_PUBLIC_DOMAIN: ${{ secrets.SHOPIFY_PUBLIC_DOMAIN }}
+          WHATSAPP_NUMBER: ${{ secrets.WHATSAPP_NUMBER }}
+        run: node src/previewCards.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anteprima-grafica
+          path: preview-out/

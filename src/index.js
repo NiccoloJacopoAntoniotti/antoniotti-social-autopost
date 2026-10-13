@@ -3,6 +3,7 @@ import { postToInstagram, postToInstagramStory, postToFacebook } from "./meta.js
 import { loadHistory, saveHistoryEntry, recentCaptions } from "./history.js";
 import { pickNextItem } from "./picker.js";
 import { buildStoryImage, buildFeedImage } from "./storyImage.js";
+import { renderFeedCard, renderStoryCard, closeCardBrowser } from "./cards.js";
 import { commitAndPush } from "./git.js";
 import { writeFile } from "node:fs/promises";
 
@@ -90,10 +91,35 @@ async function main() {
   const caption = await generateCaption(item, { avoidCaptions: recentCaptions(history) });
   console.log("Caption generata:\n" + caption);
 
+  const logoPath = new URL("../assets/logo.jpg", import.meta.url);
+  const whatsappNumber = formatWhatsappNumber(process.env.WHATSAPP_NUMBER);
+  const cardArgs = {
+    imageUrl: item.imageUrl,
+    title: item.title,
+    collectionHandle: item.collectionHandle,
+    whatsappNumber, // niente emoji nel testo: i renderer headless spesso non hanno i font a colori
+    siteDomain: process.env.SHOPIFY_PUBLIC_DOMAIN,
+    logoPath,
+  };
+
+  // Grafica del feed nello stile del sito (prodotto intero, titolo breve, un
+  // solo invito all'azione). Se non riesce, si pubblica la foto originale del
+  // prodotto come prima: la grafica non deve mai far saltare un post.
+  let feedImageUrl = null;
+  try {
+    const feedBuffer = await renderFeedCard(cardArgs);
+    await writeFile(new URL(`../${FEED_IMAGE_PATH}`, import.meta.url), feedBuffer);
+    commitAndPush(FEED_IMAGE_PATH, "chore: aggiorna immagine feed social autopost");
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // dà tempo alla CDN di propagare il file
+    feedImageUrl = `https://raw.githubusercontent.com/${REPO}/main/${FEED_IMAGE_PATH}?t=${Date.now()}`;
+  } catch (err) {
+    console.error("Grafica del feed non generata, uso la foto originale:", err.message);
+  }
+
   // Il post sul feed Instagram è la pubblicazione "principale": appena riesce,
   // salviamo subito lo storico. Così, se storia o Facebook falliscono dopo,
   // un eventuale nuovo tentativo non ripubblica lo stesso prodotto da capo.
-  await postInstagramFeedWithFallback(item, caption);
+  await postInstagramFeedWithFallback(feedImageUrl ? { ...item, imageUrl: feedImageUrl } : item, caption);
   await saveHistoryEntry({
     key: item.key,
     title: item.title,
@@ -106,13 +132,19 @@ async function main() {
   const failures = [];
 
   try {
-    const storyBuffer = await buildStoryImage({
-      imageUrl: item.imageUrl,
-      title: item.title,
-      whatsappNumber: formatWhatsappNumber(process.env.WHATSAPP_NUMBER), // niente emoji: i renderer SVG headless spesso non hanno i font a colori
-      siteDomain: process.env.SHOPIFY_PUBLIC_DOMAIN,
-      logoPath: new URL("../assets/logo.jpg", import.meta.url),
-    });
+    let storyBuffer;
+    try {
+      storyBuffer = await renderStoryCard(cardArgs);
+    } catch (err) {
+      console.error("Grafica della storia non generata, uso il modello di riserva:", err.message);
+      storyBuffer = await buildStoryImage({
+        imageUrl: item.imageUrl,
+        title: item.title,
+        whatsappNumber,
+        siteDomain: process.env.SHOPIFY_PUBLIC_DOMAIN,
+        logoPath,
+      });
+    }
     await writeFile(new URL(`../${STORY_IMAGE_PATH}`, import.meta.url), storyBuffer);
     commitAndPush(STORY_IMAGE_PATH, "chore: aggiorna immagine storia social autopost");
     await new Promise((resolve) => setTimeout(resolve, 5000)); // dà tempo alla CDN di propagare il file
@@ -126,12 +158,14 @@ async function main() {
   }
 
   try {
-    await postToFacebook({ imageUrl: item.imageUrl, caption });
+    await postToFacebook({ imageUrl: feedImageUrl ?? item.imageUrl, caption });
     console.log("Pubblicato anche su Facebook.");
   } catch (err) {
     console.error("Errore nella pubblicazione su Facebook:", err);
     failures.push("Facebook");
   }
+
+  await closeCardBrowser();
 
   if (failures.length > 0) {
     throw new Error(`Pubblicazione riuscita solo parzialmente, falliti: ${failures.join(", ")}`);

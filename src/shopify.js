@@ -15,9 +15,37 @@ export const JOLLY_COLLECTION_HANDLE = "social-in-evidenza";
 
 // Handle delle collezioni da cui pescare i prodotti. Aggiungerne/togliere qui
 // per cambiare cosa può essere pubblicato, senza toccare il resto del codice.
+// Ordine = priorità di assegnazione: un prodotto presente in più collezioni
+// viene attribuito alla prima che lo contiene (quindi le collezioni
+// specifiche stanno prima di quelle "contenitore" come accessori-moto).
+// Collezioni del nuovo sito (ott 2026): vedi antoniotti-autoricambi.com/collections
 const FEATURED_COLLECTION_HANDLES = [
-  "bardahl-olio-e-trattamenti-motore",
+  // nuove collezioni del sito
+  "sistema-frenante",
+  "tagliando-olio-filtri",
+  "sospensioni-sterzo",
+  "olio-motore",
+  "lampadine-fari-led",
+  "sistemi-xenon-e-sensori-di-parcheggio",
+  "candele-batterie-lampadine",
+  "riparazioni-additivi-emergenza",
+  "pulizia-interni-vetri",
+  "pulizia-cerchi-pneumatici",
+  "lavaggio-protezione-carrozzeria",
+  "pulizia-climatizzatore-abitacolo",
+  "accessori-inverno-liquidi-auto",
+  "barre-portatutto",
+  "bauli-da-tetto",
+  "portabici-peruzzo",
+  "terminali-di-scarico-e-distanziali",
+  "pomelli-cambio-lampa",
+  "interfoni-moto",
+  "abbigliamento-moto-estate",
+  "abbigliamento-moto-inverno",
+  "oli-additivi-e-cura-moto",
   "caschi-da-moto",
+  // collezioni-marca storiche
+  "bardahl-olio-e-trattamenti-motore",
   "ceramic-power-liquid",
   "copriauto-antigrandine-co-ra",
   "copricerchi",
@@ -25,6 +53,8 @@ const FEATURED_COLLECTION_HANDLES = [
   "optiline",
   "peruzzo",
   "tergicristallo-bosh",
+  // contenitore generico moto (ultima: i prodotti già attribuiti sopra non si ripetono)
+  "accessori-moto",
   JOLLY_COLLECTION_HANDLE,
 ];
 
@@ -72,16 +102,28 @@ async function findCollectionIdsByHandle(handles) {
   return found;
 }
 
-export async function getFeaturedCollectionProducts({ limit = 10 } = {}) {
+export async function getFeaturedCollectionProducts({ limit = 250 } = {}) {
   const idsByHandle = await findCollectionIdsByHandle(FEATURED_COLLECTION_HANDLES);
 
   const products = [];
-  for (const [handle, collectionId] of idsByHandle) {
+  const seenIds = new Set();
+  // Si scorre nell'ordine di FEATURED_COLLECTION_HANDLES (non in quello in cui
+  // Shopify restituisce le collezioni), così l'attribuzione è prevedibile.
+  for (const handle of FEATURED_COLLECTION_HANDLES) {
+    const collectionId = idsByHandle.get(handle);
+    if (!collectionId) continue;
     const data = await shopifyFetch(
-      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants,tags,body_html`
+      `collections/${collectionId}/products.json?limit=${limit}&status=any&fields=id,title,handle,images,variants,tags,body_html,status`
     );
     for (const product of data.products ?? []) {
       if (!product.images?.length) continue; // niente immagine, niente post
+      // Mai prodotti archiviati (es. marchi che il negozio non tiene più) e, fuori
+      // dalla collezione jolly (dove le bozze sono volute), solo prodotti
+      // attivi cioè davvero visibili sul sito.
+      if (product.status === "archived") continue;
+      if (handle !== JOLLY_COLLECTION_HANDLE && product.status !== "active") continue;
+      if (seenIds.has(product.id)) continue;
+      seenIds.add(product.id);
       products.push({
         id: product.id,
         title: product.title,
