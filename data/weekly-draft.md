@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-10-19
+# Contenuto della settimana — 2026-10-26
 
 ## Prodotto scelto
-KYB parti sterzo e sospensioni — collezione: sospensioni-sterzo
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/kyb-parti-sterzo.jpg?v=1791749420
+Portabici da tetto Top Bike con antifurto TUV — collezione: portabici-peruzzo
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_5_3f258191-92b5-4ae8-8f0b-36aeddba99f0.png?v=1655713790
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Rumori metallici sulle buche, sterzo che sembra "ballare" o gomme che si consumano in modo strano da un lato: spesso il problema non è nella sospensione in sé, ma negli snodi che la collegano allo sterzo.
+La bici balla sul portapacchi anche dopo aver stretto tutto per bene? 🚲
 
-Parliamo di snodi sferici, bracci oscillanti, biellette della barra stabilizzatrice, testine e terminali della cremagliera: sono i punti di articolazione che permettono alla ruota di muoversi seguendo terreno e sterzata, mantenendo però l'allineamento corretto. Quando si usurano, lo sterzo diventa impreciso, si sentono colpi secchi sui dossi o l'auto tira da un lato.
+Parliamo del portabici da tetto a telaio, quello che blocca la bicicletta agganciandola al tubo del telaio invece che alle ruote. Il punto critico è sempre la tenuta: cinghie e viteria devono reggere lo sforzo del vento in autostrada senza allentarsi, e per questo modello si parla di cinghie testate fino a 150 kg di tenuta ciascuna, con chiusura a chiave contro i furti.
 
-Qui l'errore classico è ordinare online cercando solo per modello: questi componenti cambiano spesso tra asse anteriore e posteriore, e anche tra versioni dello stesso modello. Un codice sbagliato monta, ma lavora male nel tempo.
+Va controllato quando noti giochi, cigolii o la cinghia che si allenta da sola col tempo. Attenzione però: non tutti i telai hanno la stessa sezione, e un portabici preso al volo online rischia di non adattarsi al tubo della bici o al tetto dell'auto.
 
-Scrivici targa o libretto 📋: verifichiamo il codice giusto e restiamo a disposizione anche dopo il montaggio.
+Se hai dubbi su misure o montaggio, scrivici modello di auto e di bici: verifichiamo insieme prima che tu spenda, e restiamo a disposizione anche dopo.
 
-👉 https://wa.me/393272436497
+📲 https://wa.me/393272436497
