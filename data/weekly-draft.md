@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-10-26
+# Contenuto della settimana — 2026-11-02
 
 ## Prodotto scelto
-Portabici da tetto Top Bike con antifurto TUV — collezione: portabici-peruzzo
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_5_3f258191-92b5-4ae8-8f0b-36aeddba99f0.png?v=1655713790
+Meguiar's Hybrid Ceramic Wax spray 769 ml — collezione: lavaggio-protezione-carrozzeria
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/meguiars-hybrid-ceramic-wax-spray-769-ml.jpg?v=1791749420
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-La bici balla sul portapacchi anche dopo aver stretto tutto per bene? 🚲
+La carrozzeria si sporca subito e l'acqua non scivola più via come prima?
 
-Parliamo del portabici da tetto a telaio, quello che blocca la bicicletta agganciandola al tubo del telaio invece che alle ruote. Il punto critico è sempre la tenuta: cinghie e viteria devono reggere lo sforzo del vento in autostrada senza allentarsi, e per questo modello si parla di cinghie testate fino a 150 kg di tenuta ciascuna, con chiusura a chiave contro i furti.
+Qui parliamo di una cera spray a tecnologia ceramica ibrida (SiO2): si applica direttamente a spruzzo, senza tamponi e senza tempi di attesa per la polimerizzazione. Il suo compito è creare una protezione idrofobica, cioè far sì che acqua e sporco scivolino via più facilmente, con una tenuta dichiarata superiore a una cera tradizionale.
 
-Va controllato quando noti giochi, cigolii o la cinghia che si allenta da sola col tempo. Attenzione però: non tutti i telai hanno la stessa sezione, e un portabici preso al volo online rischia di non adattarsi al tubo della bici o al tetto dell'auto.
+Non è un prodotto meccanico quindi qui il tema "compatibilità" non si pone come per un ricambio — ma vale sempre la regola di non fidarsi solo del nome: tante linee simili promettono protezioni diverse tra loro, e capire quale serve davvero per la propria carrozzeria e il suo stato richiede due minuti di confronto.
 
-Se hai dubbi su misure o montaggio, scrivici modello di auto e di bici: verifichiamo insieme prima che tu spenda, e restiamo a disposizione anche dopo.
+Se hai dubbi su quale protezione fa al caso tuo, scrivici 🧴 ti rispondiamo anche dopo l'acquisto.
 
-📲 https://wa.me/393272436497
+👉 https://wa.me/393272436497
