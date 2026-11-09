@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-11-02
+# Contenuto della settimana — 2026-11-09
 
 ## Prodotto scelto
-Meguiar's Hybrid Ceramic Wax spray 769 ml — collezione: lavaggio-protezione-carrozzeria
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/meguiars-hybrid-ceramic-wax-spray-769-ml.jpg?v=1791749420
+BARDAHL XTC C60 15W50 324141 - Olio Motore 4 Tempi, per Moto, XTC C60 15W-50, 1 Litro — collezione: oli-additivi-e-cura-moto
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_1_af107d87-1fa5-4bbb-b8d1-7a347b485cda.png?v=1655904502
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-La carrozzeria si sporca subito e l'acqua non scivola più via come prima?
+Moto che sembra meno pronta, o frizione che non "molla" bene tra una marcia e l'altra: spesso c'entra l'olio motore.
 
-Qui parliamo di una cera spray a tecnologia ceramica ibrida (SiO2): si applica direttamente a spruzzo, senza tamponi e senza tempi di attesa per la polimerizzazione. Il suo compito è creare una protezione idrofobica, cioè far sì che acqua e sporco scivolino via più facilmente, con una tenuta dichiarata superiore a una cera tradizionale.
+Non serve solo a lubrificare: protegge dal calore, tiene puliti gli interni e mantiene la viscosità giusta anche a regimi alti. Il Bardahl XTC C60 15W-50, ad esempio, è pensato per moto sportive o di alta cilindrata, adatto sia a cambio integrato che separato, con frizione a bagno d'olio o a secco.
 
-Non è un prodotto meccanico quindi qui il tema "compatibilità" non si pone come per un ricambio — ma vale sempre la regola di non fidarsi solo del nome: tante linee simili promettono protezioni diverse tra loro, e capire quale serve davvero per la propria carrozzeria e il suo stato richiede due minuti di confronto.
+Ogni moto però ha le sue esigenze: viscosità e compatibilità con la frizione non sono uguali per tutte. Prenderlo online guardando solo la sigla, senza controllare cosa richiede il costruttore, è l'errore più comune 🤏
 
-Se hai dubbi su quale protezione fa al caso tuo, scrivici 🧴 ti rispondiamo anche dopo l'acquisto.
+Non diamo mai per scontato che un olio generico vada bene: scrivici modello e cilindrata, verifichiamo insieme — e restiamo a disposizione anche dopo l'acquisto.
 
-👉 https://wa.me/393272436497
+📲 Scrivici su WhatsApp: https://wa.me/393272436497
