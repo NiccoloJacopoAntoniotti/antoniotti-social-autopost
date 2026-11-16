@@ -1,20 +1,20 @@
-# Contenuto della settimana — 2026-11-09
+# Contenuto della settimana — 2026-11-16
 
 ## Prodotto scelto
-BARDAHL XTC C60 15W50 324141 - Olio Motore 4 Tempi, per Moto, XTC C60 15W-50, 1 Litro — collezione: oli-additivi-e-cura-moto
-Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/products/Screenshot_1_af107d87-1fa5-4bbb-b8d1-7a347b485cda.png?v=1655904502
+Simoni Racing Terminale rotondo Ø 60 mm acciaio inox nero (TRX/111N) — collezione: terminali-di-scarico-e-distanziali
+Foto: https://cdn.shopify.com/s/files/1/0576/8131/3966/files/simoni-racing-terminale-trx-111n.jpg?v=1791879909
 
 ## Telegram (canale: https://t.me/antoniottiautoricambi)
 Stato: pubblicato automaticamente
 
 🔧 IL RICAMBIO DELLA SETTIMANA
 
-Moto che sembra meno pronta, o frizione che non "molla" bene tra una marcia e l'altra: spesso c'entra l'olio motore.
+Il terminale di scarico è arrugginito, opaco o si muove se lo spingi con la mano?
 
-Non serve solo a lubrificare: protegge dal calore, tiene puliti gli interni e mantiene la viscosità giusta anche a regimi alti. Il Bardahl XTC C60 15W-50, ad esempio, è pensato per moto sportive o di alta cilindrata, adatto sia a cambio integrato che separato, con frizione a bagno d'olio o a secco.
+È il pezzo finale del tubo di scappamento, quello visibile da dietro l'auto. Ha funzione estetica e di finitura, più un ruolo di protezione dell'ultimo tratto dalla corrosione: non cambia le prestazioni. Va controllato quando noti ruggine diffusa, bordi scrostati o se è allentato rispetto al tubo originale.
 
-Ogni moto però ha le sue esigenze: viscosità e compatibilità con la frizione non sono uguali per tutte. Prenderlo online guardando solo la sigla, senza controllare cosa richiede il costruttore, è l'errore più comune 🤏
+Essendo universale, si fissa su misure diverse a seconda del diametro dello scarico della tua auto: l'errore comune comprandolo online da soli è guardare solo l'estetica e non controllare che l'entrata corrisponda al tuo tubo, altrimenti non si monta bene.
 
-Non diamo mai per scontato che un olio generico vada bene: scrivici modello e cilindrata, verifichiamo insieme — e restiamo a disposizione anche dopo l'acquisto.
+Non diamo per scontato che un terminale generico vada bene così: se hai dubbi sulla misura, scrivici con targa o modello e verifichiamo insieme, anche dopo l'acquisto. 📎
 
-📲 Scrivici su WhatsApp: https://wa.me/393272436497
+Scrivici su WhatsApp: https://wa.me/393272436497
